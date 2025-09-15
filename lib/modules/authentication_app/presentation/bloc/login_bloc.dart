@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mohalla_bazaar/modules/auth/domain/usecases/login_usecase.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/domain/usecases/login_usecase.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 

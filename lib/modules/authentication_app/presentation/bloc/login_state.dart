@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:mohalla_bazaar/modules/auth/domain/entities/login_result.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/domain/entities/login_result.dart';
 
 /// ===============================
 /// LoginStatus Enum

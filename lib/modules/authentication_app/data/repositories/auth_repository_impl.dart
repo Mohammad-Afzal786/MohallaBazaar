@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:mohalla_bazaar/core/errors/exceptions.dart';
 import 'package:mohalla_bazaar/core/errors/failures.dart';
-import 'package:mohalla_bazaar/modules/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/data/datasources/auth_remote_datasource.dart';
 import '../../domain/entities/login_result.dart';
 import '../../domain/repositories/auth_repository.dart';
 

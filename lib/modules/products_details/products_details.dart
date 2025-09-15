@@ -1,13 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:mohalla_bazaar/config/routes.dart';
 import 'package:mohalla_bazaar/core/utils/app_colors.dart';
 import 'package:mohalla_bazaar/core/utils/nav_helper.dart';
-import 'package:mohalla_bazaar/modules/deshboard/controllers/dashboard_controller.dart';
 
 class ProductsDetails extends StatefulWidget {
   const ProductsDetails({super.key});

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mohalla_bazaar/modules/auth/auth_injection.dart';
-import 'package:mohalla_bazaar/modules/auth/presentation/bloc/login_bloc.dart';
-import 'package:mohalla_bazaar/modules/auth/presentation/pages/login.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/auth_injection.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/login_bloc.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/presentation/pages/login.dart';
 import 'package:mohalla_bazaar/modules/deshboard/deshboard.dart';
 
 // 👈 apne dashboard ka import lagao

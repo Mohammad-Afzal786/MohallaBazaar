@@ -856,8 +856,9 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                                       context,
                                       currentSort,
                                     );
-                                    if (selected != null)
+                                    if (selected != null) {
                                       sortNotifier.value = selected; // [17]
+                                    }
                                   },
                                 ),
                                 // _buildChip(label: "Brand", onTap: () {}),

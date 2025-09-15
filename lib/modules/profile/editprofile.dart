@@ -28,10 +28,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
           'Edit Profile',
           style: TextStyle(fontSize: 18.sp), // responsive text
         ),
-        leading: IconButton(
-          icon: Icon(CupertinoIcons.back),
-          onPressed: () => NavHelper.backToProfileFromEdit(),
-        ),
+        // leading: IconButton(
+        //   icon: Icon(CupertinoIcons.back),
+        //   // onPressed: () => NavHelper.backToProfileFromEdit(),
+        // ),
        
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
@@ -138,18 +138,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
             Row(
               children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => NavHelper.backToProfileFromEdit(),
-                    style: OutlinedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
-                      textStyle: TextStyle(fontSize: 14.sp),
-                      foregroundColor: AppsColors.primary,
+                // Expanded(
+                //   child: OutlinedButton(
+                //     onPressed: () => NavHelper.backToProfileFromEdit(),
+                //     style: OutlinedButton.styleFrom(
+                //       padding: EdgeInsets.symmetric(vertical: 12.h),
+                //       textStyle: TextStyle(fontSize: 14.sp),
+                //       foregroundColor: AppsColors.primary,
 
-                    ),
-                    child: Text("CANCEL"),
-                  ),
-                ),
+                //     ),
+                //     child: Text("CANCEL"),
+                //   ),
+                // ),
                 SizedBox(width: 16.w),
                 Expanded(
                   child: ElevatedButton(

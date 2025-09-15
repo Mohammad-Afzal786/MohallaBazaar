@@ -1,4 +1,3 @@
-
 import 'package:get/get.dart';
 
 class DashboardController extends GetxController {
@@ -11,5 +10,14 @@ class DashboardController extends GetxController {
 
   void hideBottomNav() => isBottomNavVisible.value = false;
   void showBottomNav() => isBottomNavVisible.value = true;
-}
 
+  @override
+  void onReady() {
+    super.onReady();
+    final args = Get.arguments;
+    if (args != null && args.containsKey("tab")) {
+      final int tabIndex = args["tab"];
+      changeTab(tabIndex);
+    }
+  }
+}

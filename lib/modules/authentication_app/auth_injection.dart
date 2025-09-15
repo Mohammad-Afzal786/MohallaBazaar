@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mohalla_bazaar/core/network/dio_client.dart';
-import 'package:mohalla_bazaar/modules/auth/data/datasources/auth_remote_datasource.dart';
-import 'package:mohalla_bazaar/modules/auth/data/repositories/auth_repository_impl.dart';
-import 'package:mohalla_bazaar/modules/auth/domain/repositories/auth_repository.dart';
-import 'package:mohalla_bazaar/modules/auth/domain/usecases/login_usecase.dart';
-import 'package:mohalla_bazaar/modules/auth/presentation/bloc/login_bloc.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/data/datasources/auth_remote_datasource.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/data/repositories/auth_repository_impl.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/domain/repositories/auth_repository.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/domain/usecases/login_usecase.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/login_bloc.dart';
 
 final sl = GetIt.instance;
 

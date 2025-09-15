@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mohalla_bazaar/core/utils/app_colors.dart';
 import 'package:mohalla_bazaar/modules/deshboard/controllers/dashboard_controller.dart';
-import 'package:mohalla_bazaar/modules/deshboard/home.dart';
-import 'package:mohalla_bazaar/modules/deshboard/category.dart';
-import 'package:mohalla_bazaar/modules/deshboard/cart.dart';
-import 'package:mohalla_bazaar/modules/deshboard/orderagain.dart';
+import 'package:mohalla_bazaar/modules/home/home.dart';
+import 'package:mohalla_bazaar/modules/category/category.dart';
+import 'package:mohalla_bazaar/modules/cart/cart.dart';
+import 'package:mohalla_bazaar/modules/orderagain/orderagain.dart';
 
 
 class Dashboard extends StatefulWidget {
