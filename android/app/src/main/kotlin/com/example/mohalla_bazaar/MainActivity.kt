@@ -1,0 +1,5 @@
+package com.example.mohalla_bazaar
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()
