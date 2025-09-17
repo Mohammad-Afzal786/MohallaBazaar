@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mohalla_bazaar/modules/authentication_app/auth_injection.dart';
-import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/login_bloc.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/presentation/pages/login.dart';
-import 'package:mohalla_bazaar/modules/deshboard/deshboard.dart';
-
-// 👈 apne dashboard ka import lagao
 
 class LoginWrapper extends StatelessWidget {
   const LoginWrapper({super.key});
@@ -18,13 +12,10 @@ class LoginWrapper extends StatelessWidget {
 
     if (token != null) {
       // ✅ Agar token mila to sidha dashboard pe bhejo
-      return const Dashboard();
+      return const LoginPage();
     } else {
       // ✅ Agar token null hai to login pe bhejo
-      return BlocProvider(
-        create: (_) => sl<LoginBloc>(),
-        child: const LoginPage(),
-      );
+      return const LoginPage();
     }
   }
 }

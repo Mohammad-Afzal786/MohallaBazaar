@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:mohalla_bazaar/core/utils/pagetransaction.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/presentation/pages/createaccountpage.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/forgetpass/forgetpass.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/presentation/pages/login_wrapper.dart';
 import 'package:mohalla_bazaar/modules/coinwallet/coinwallet.dart';
 import 'package:mohalla_bazaar/modules/deshboard/deshboard.dart';
@@ -32,7 +34,8 @@ class AppRoutes {
   static final List<GetPage> pages = [
     GetPage(name: splash, page: () => SplashPage()),
     GetPage(name: onbording, page: () => OnboardingPage()),
-
+ GetPage(name: createAccount, page: () => CreateAccountPage()),
+  GetPage(name: forgetPassword, page: () => ForgotPasswordScreen()),
     GetPage(name: login, page: () => const LoginWrapper()),
     GetPage(
       name: dashboard,

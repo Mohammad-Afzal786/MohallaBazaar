@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:mohalla_bazaar/core/errors/exceptions.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/data/models/register_request.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/data/models/register_response.dart';
 
 import 'package:retrofit/retrofit.dart';
 import '../models/login_request.dart';
@@ -12,10 +14,15 @@ abstract class AuthApiService {
 
   @POST('login')
   Future<LoginResponse> login(@Body() LoginRequest body);
+
+  @POST('register') // ✅ Add this
+  Future<RegisterResponse> register(@Body() RegisterRequest body);
 }
 
 abstract class AuthRemoteDataSource {
   Future<LoginResponse> login(String email, String password);
+
+  Future<RegisterResponse> register(String firstName, String lastName, String email, String password, String phone);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -27,6 +34,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       final req = LoginRequest(email: email, password: password);
       return await api.login(req);
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message']?.toString() ?? e.message ?? '';
+      throw ServerException(msg, statusCode: e.response?.statusCode);
+    }
+  }
+
+  @override
+  Future<RegisterResponse> register(String firstName, String lastName, String email, String password, String phone) async {
+    try {
+      final req = RegisterRequest(
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password,
+        phone: phone,
+      );
+      return await api.register(req);
     } on DioException catch (e) {
       final msg = e.response?.data?['message']?.toString() ?? e.message ?? '';
       throw ServerException(msg, statusCode: e.response?.statusCode);

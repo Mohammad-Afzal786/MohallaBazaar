@@ -5,7 +5,9 @@ import 'package:mohalla_bazaar/modules/authentication_app/data/datasources/auth_
 import 'package:mohalla_bazaar/modules/authentication_app/data/repositories/auth_repository_impl.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/domain/repositories/auth_repository.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/domain/usecases/login_usecase.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/domain/usecases/ragister_usecase.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/login_bloc.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/ragistar_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -14,16 +16,21 @@ Future<void> initAuthInjection({required String baseUrl}) async {
 
   final api = AuthApiService(dio, baseUrl: baseUrl);
 
+  // ✅ Remote DataSource
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(api),
   );
 
   // ✅ Repository
-  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
+  sl.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(sl()),
+  );
 
-  // ✅ UseCase
+  // ✅ UseCases
   sl.registerLazySingleton<LoginUseCase>(() => LoginUseCase(sl()));
+  sl.registerLazySingleton<RegisterUseCase>(() => RegisterUseCase(sl()));
 
-  // ✅ Bloc
+  // ✅ Blocs
   sl.registerFactory<LoginBloc>(() => LoginBloc(sl()));
+  sl.registerFactory<RegisterBloc>(() => RegisterBloc(sl()));
 }

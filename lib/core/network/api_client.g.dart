@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_remote_datasource.dart';
+part of 'api_client.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,12 +8,14 @@ part of 'auth_remote_datasource.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element
 
-class _AuthApiService implements AuthApiService {
-  _AuthApiService(
+class _ApiClient implements ApiClient {
+  _ApiClient(
     this._dio, {
     this.baseUrl,
     this.errorLogger,
-  });
+  }) {
+    baseUrl ??= 'http://10.0.2.2:3000/api/';
+  }
 
   final Dio _dio;
 
@@ -22,12 +24,12 @@ class _AuthApiService implements AuthApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<LoginResponse> login(LoginRequest body) async {
-    final _extra = <String, dynamic>{};
+  Future<LoginResponse> login(LoginRequest request) async {
+    final _extra = <String, dynamic>{'requiresToken': false};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(body.toJson());
+    _data.addAll(request.toJson());
     final _options = _setStreamType<LoginResponse>(Options(
       method: 'POST',
       headers: _headers,
@@ -35,7 +37,7 @@ class _AuthApiService implements AuthApiService {
     )
         .compose(
           _dio.options,
-          'login',
+          '/login',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -56,12 +58,12 @@ class _AuthApiService implements AuthApiService {
   }
 
   @override
-  Future<RegisterResponse> register(RegisterRequest body) async {
-    final _extra = <String, dynamic>{};
+  Future<RegisterResponse> register(RegisterRequest request) async {
+    final _extra = <String, dynamic>{'requiresToken': false};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(body.toJson());
+    _data.addAll(request.toJson());
     final _options = _setStreamType<RegisterResponse>(Options(
       method: 'POST',
       headers: _headers,
@@ -69,7 +71,7 @@ class _AuthApiService implements AuthApiService {
     )
         .compose(
           _dio.options,
-          'register',
+          '/register',
           queryParameters: queryParameters,
           data: _data,
         )
