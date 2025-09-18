@@ -8,9 +8,11 @@ import 'package:device_preview/device_preview.dart';
 
 // DI locator
 
-import 'package:mohalla_bazaar/modules/authentication_app/auth_injection.dart';
+import 'package:mohalla_bazaar/auth_injection.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/forgatepass_bloc.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/login_bloc.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/ragistar_bloc.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/resetpassword_bloc.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -23,8 +25,10 @@ class MyApp extends StatelessWidget {
       builder: (context, _) {
         return MultiBlocProvider(
           providers: [
-              BlocProvider(create: (_) => sl<LoginBloc>()),
+            BlocProvider(create: (_) => sl<LoginBloc>()),
             BlocProvider(create: (_) => sl<RegisterBloc>()),
+            BlocProvider(create: (_) => sl<ForgotPassBloc>()),
+            BlocProvider(create: (_) => sl<ResetPasswordBloc>()),
           ],
           child: GetMaterialApp(
             debugShowCheckedModeBanner: false,

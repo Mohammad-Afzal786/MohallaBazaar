@@ -23,7 +23,7 @@ class SplashPageState extends State<SplashPage> {
     Future.delayed(const Duration(seconds: 4), () {
       bool seenIntro = box.read('seenIntro') ?? false;
       if (seenIntro) {
-        NavHelper.goToCreateAccount();
+        NavHelper.goToLogin();
       } else {
         NavHelper.goToonbording();
       }

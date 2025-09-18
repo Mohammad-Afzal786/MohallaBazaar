@@ -11,12 +11,28 @@ class NavHelper {
       Get.offAllNamed(AppRoutes.login);
     }
   }
+   static void goTochangepass(String userId) {
+  if (Get.currentRoute != AppRoutes.resetpassword) {
+    Get.toNamed(
+      AppRoutes.resetpassword,
+      arguments: {"userId": userId}, // 👈 userId पास कर दिया
+    );
+  }
+}
+
 
   static void backToLogin() {
     if (Get.previousRoute == AppRoutes.login) {
       Get.back();
     } else {
       Get.offAllNamed(AppRoutes.login);
+    }
+  }
+  static void backTochangepass() {
+    if (Get.previousRoute == AppRoutes.resetpassword) {
+      Get.back();
+    } else {
+      Get.offAllNamed(AppRoutes.resetpassword);
     }
   }
 

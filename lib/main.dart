@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mohalla_bazaar/modules/authentication_app/auth_injection.dart';
+import 'package:mohalla_bazaar/auth_injection.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:mohalla_bazaar/modules/deshboard/controllers/dashboard_controller.dart';
 
@@ -22,7 +22,7 @@ Future<void> main() async {
   // ✅ Push Notification init
  
 
-  await initAuthInjection(baseUrl: baseUrl);
+  await initInjection(baseUrl: baseUrl);
 
   runApp(
     DevicePreview(

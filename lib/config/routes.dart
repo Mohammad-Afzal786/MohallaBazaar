@@ -1,7 +1,8 @@
 import 'package:get/get.dart';
 import 'package:mohalla_bazaar/core/utils/pagetransaction.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/presentation/pages/reset_password_screen.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/presentation/pages/createaccountpage.dart';
-import 'package:mohalla_bazaar/modules/authentication_app/forgetpass/forgetpass.dart';
+import 'package:mohalla_bazaar/modules/authentication_app/presentation/pages/forgetpass.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/presentation/pages/login_wrapper.dart';
 import 'package:mohalla_bazaar/modules/coinwallet/coinwallet.dart';
 import 'package:mohalla_bazaar/modules/deshboard/deshboard.dart';
@@ -30,12 +31,21 @@ class AppRoutes {
   static const String categorydetails = '/categorydetails';
   static const String productssearch = '/productssearch';
   static const String productsdetails = '/productsdetails';
+   static const String resetpassword = '/resetpassword';
   // ✅ Route pages
   static final List<GetPage> pages = [
     GetPage(name: splash, page: () => SplashPage()),
     GetPage(name: onbording, page: () => OnboardingPage()),
  GetPage(name: createAccount, page: () => CreateAccountPage()),
   GetPage(name: forgetPassword, page: () => ForgotPasswordScreen()),
+   GetPage(
+  name: AppRoutes.resetpassword,
+  page: () {
+    final args = Get.arguments as Map<String, dynamic>;
+    return ResetPasswordScreen(userId: args["userId"]);
+  },
+),
+
     GetPage(name: login, page: () => const LoginWrapper()),
     GetPage(
       name: dashboard,

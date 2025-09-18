@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/route_manager.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mohalla_bazaar/core/utils/app_colors.dart';
 import 'package:mohalla_bazaar/core/widget/mohallabazaarlogo.dart';
@@ -118,9 +119,10 @@ class _LoginPageState extends State<LoginPage> {
               box.write('refreshToken', state.data!.refreshToken);
               NavHelper.goToDashboard();
             } else if (state.status == LoginStatus.failure) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.error ?? 'Error')));
+              Get.snackbar(
+                "Error", // title
+                state.error ?? "Error", // message
+              );
             }
           },
           builder: (context, state) {
@@ -277,7 +279,7 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                             ),
                           ),
-                         
+
                           SizedBox(height: 18.h),
 
                           /// Divider with OR
