@@ -43,6 +43,10 @@ dependencies:
   flutter_svg: ^2.2.1
   lottie: ^3.3.2
 
+  #isar
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -50,10 +54,11 @@ dev_dependencies:
 
   # 🚀 Code generation
   build_runner: ^2.4.8
-  retrofit_generator: ^10.0.5
+  retrofit_generator: ^8.2.1
   json_serializable: ^6.7.1
   flutter_launcher_icons: ^0.14.4
-  analyzer: ^8.1.1
+  
+  isar_generator: ^3.1.0+1 # <--- इस version को बदलें
 
 flutter_launcher_icons:
   android: true

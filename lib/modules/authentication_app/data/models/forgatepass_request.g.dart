@@ -7,7 +7,11 @@ part of 'forgatepass_request.dart';
 // **************************************************************************
 
 ForgotPassRequest _$ForgotPassRequestFromJson(Map<String, dynamic> json) =>
-    ForgotPassRequest(email: json['email'] as String);
+    ForgotPassRequest(
+      email: json['email'] as String,
+    );
 
 Map<String, dynamic> _$ForgotPassRequestToJson(ForgotPassRequest instance) =>
-    <String, dynamic>{'email': instance.email};
+    <String, dynamic>{
+      'email': instance.email,
+    };

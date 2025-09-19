@@ -13,4 +13,7 @@ RegisterResponse _$RegisterResponseFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$RegisterResponseToJson(RegisterResponse instance) =>
-    <String, dynamic>{'message': instance.message, 'userId': instance.userId};
+    <String, dynamic>{
+      'message': instance.message,
+      'userId': instance.userId,
+    };

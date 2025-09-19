@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/domain/entities/forgatepass_result.dart';
-import 'package:mohalla_bazaar/modules/authentication_app/domain/entities/forgetpassentity.dart';
 
 /// Process की सभी स्थितियाँ (state)
 enum ForgotPassStatus { initial, loading, success, failure }

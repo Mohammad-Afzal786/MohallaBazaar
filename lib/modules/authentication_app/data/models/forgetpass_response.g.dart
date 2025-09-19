@@ -13,4 +13,7 @@ ForgotPassResponse _$ForgotPassResponseFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$ForgotPassResponseToJson(ForgotPassResponse instance) =>
-    <String, dynamic>{'success': instance.success, 'data': instance.data};
+    <String, dynamic>{
+      'success': instance.success,
+      'data': instance.data,
+    };

@@ -13,6 +13,12 @@ import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/forg
 import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/login_bloc.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/ragistar_bloc.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/resetpassword_bloc.dart';
+import 'package:mohalla_bazaar/modules/category/data/datasources/categories_local_data_source.dart';
+import 'package:mohalla_bazaar/modules/category/data/datasources/categories_remote_data_source.dart';
+import 'package:mohalla_bazaar/modules/category/data/repositories/categories_repository_impl.dart';
+import 'package:mohalla_bazaar/modules/category/domain/repositories/categories_repository.dart';
+import 'package:mohalla_bazaar/modules/category/domain/usecases/get_categories_usecase.dart';
+import 'package:mohalla_bazaar/modules/category/presentation/bloc/categories_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -42,4 +48,21 @@ Future<void> initInjection({required String baseUrl}) async {
   sl.registerFactory<RegisterBloc>(() => RegisterBloc(sl()));
   sl.registerFactory<ForgotPassBloc>(() => ForgotPassBloc(sl())); // 👈 Added
   sl.registerFactory<ResetPasswordBloc>(() => ResetPasswordBloc(sl()));
+
+
+  // ============================================================
+  // 🔹 Categories Module
+  // ============================================================
+  sl.registerLazySingleton<CategoriesRemoteDataSource>(() => CategoriesRemoteDataSourceImpl(api));
+  sl.registerLazySingleton<CategoriesLocalDataSource>(() => CategoriesLocalDataSourceImpl());
+  sl.registerLazySingleton<CategoriesRepository>(() => CategoriesRepositoryImpl(
+        remote: sl(),
+        local: sl(),
+      ));
+
+  sl.registerLazySingleton<GetCategoriesUseCase>(() => GetCategoriesUseCase(sl()));
+  sl.registerFactory<CategoriesBloc>(() => CategoriesBloc(sl()));
+
+
+
 }

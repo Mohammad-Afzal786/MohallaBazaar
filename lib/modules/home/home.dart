@@ -520,7 +520,7 @@ class _StickySearchBarDelegate extends SliverPersistentHeaderDelegate {
 class _GridItemWidget extends StatelessWidget {
   final Map<String, String> data;
   final bool showText;
- // ✅ unique hero tag
+
 
   const _GridItemWidget({
     required this.data,
@@ -538,8 +538,8 @@ class _GridItemWidget extends StatelessWidget {
     },
     child: Container(
       color: Colors.white,
-      height: 120.h,
-      width: 100.w,
+      height: 110.h,
+      width: 90.w,
       child: UiHelper.CustomImage(
         img: data["img"]?.toString() ?? '',
       ),

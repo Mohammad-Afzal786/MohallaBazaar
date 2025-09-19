@@ -7,11 +7,14 @@ import 'package:mohalla_bazaar/modules/authentication_app/data/models/register_r
 import 'package:mohalla_bazaar/modules/authentication_app/data/models/register_response.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/data/models/resetpassword_request.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/data/models/resetpassword_response.dart';
+import 'package:mohalla_bazaar/modules/category/data/model/category_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'api_client.g.dart';
-
-@RestApi(baseUrl: "http://10.0.2.2:3000/api/")
+//यह Retrofit के साथ काम करने के लिए API एंडपॉइंट्स को 
+//परिभाषित करता है। यह  एंडपॉइंट 
+//के लिए एक नया मेथड जोड़ता है।
+@RestApi(baseUrl: "http://localhost:3000/api/")
 abstract class ApiClient {
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 
@@ -29,5 +32,13 @@ abstract class ApiClient {
 
    @POST("/resetpassword")
    @Extra({"requiresToken": false})
-  Future<ResetPasswordResponse> resetpassword(@Body() ResetPasswordRequest request);
+   Future<ResetPasswordResponse> resetpassword(@Body() ResetPasswordRequest request);
+
+  @GET("/categories")
+  @Extra({"requiresToken": false})
+  Future<CategoryResponse> getCategories();
+
+
+
+
 }
