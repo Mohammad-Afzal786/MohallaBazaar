@@ -242,8 +242,7 @@ class NavHelper {
   static void backTocategorydetails() {
     if (Get.currentRoute == AppRoutes.categorydetails) {
       Get.back();
-      final controller = Get.find<DashboardController>();
-      controller.changeTab(0);
+     
     } else {
       Get.offAllNamed(AppRoutes.dashboard);
       final controller = Get.find<DashboardController>();

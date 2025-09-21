@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mohalla_bazaar/core/utils/app_colors.dart';
 import 'package:mohalla_bazaar/core/utils/nav_helper.dart';
+import 'package:mohalla_bazaar/modules/deshboard/controllers/dashboard_controller.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:mohalla_bazaar/core/utils/smartcachedImag.dart';
 import 'package:mohalla_bazaar/modules/categorydetails/domain/entities/categorydetails_entity.dart';
@@ -28,7 +29,8 @@ class _CategoryDetailsState extends State<CategoryDetails>
   final selectedCategoryIndex = ValueNotifier<int>(0);
   final selectedSubCategoryId = ValueNotifier<String?>(null);
   final ItemScrollController itemScrollController = ItemScrollController();
-  final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
+  final ItemPositionsListener itemPositionsListener =
+      ItemPositionsListener.create();
 
   String selectedSortOption = "Relevance (default)";
   bool _isScrollingByTap = false;
@@ -36,17 +38,24 @@ class _CategoryDetailsState extends State<CategoryDetails>
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.light,
-      statusBarBrightness: Brightness.light,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.light,
+      ),
+    );
+  
+   
+    // मान लें controller में कोई field है जो current tab/screen बताता है
 
-// GetX se categoryId receive karna
-  final categoryId = Get.arguments as String?;
+    // GetX se categoryId receive karna
+    final categoryId = Get.arguments as String?;
 
-  if (categoryId != null) {
-    context.read<CategoryDetailsBloc>().add(CategoryDetailsRequested(categoryId));
-  }
+    if (categoryId != null) {
+      context.read<CategoryDetailsBloc>().add(
+        CategoryDetailsRequested(categoryId),
+      );
+    }
     // context.read<CategoryDetailsBloc>().add(const CategoryDetailsRequested(
     //     "3df85226-54bb-4c6f-94f0-7e093b183813"));
 
@@ -58,7 +67,8 @@ class _CategoryDetailsState extends State<CategoryDetails>
     final positions = itemPositionsListener.itemPositions.value.toList();
     if (positions.isEmpty) return;
 
-    final firstVisible = positions.where((p) => p.itemTrailingEdge > 0)
+    final firstVisible = positions
+        .where((p) => p.itemTrailingEdge > 0)
         .reduce((a, b) => a.itemLeadingEdge < b.itemLeadingEdge ? a : b);
 
     selectedCategoryIndex.value = firstVisible.index;
@@ -93,7 +103,10 @@ class _CategoryDetailsState extends State<CategoryDetails>
             return GestureDetector(
               onTap: () => _onCategoryTap(index),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 6,
+                ),
                 child: TweenAnimationBuilder<double>(
                   tween: Tween(begin: 1.0, end: isSelected ? 1.08 : 1.0),
                   duration: const Duration(milliseconds: 250),
@@ -105,7 +118,10 @@ class _CategoryDetailsState extends State<CategoryDetails>
                       decoration: isSelected
                           ? const BoxDecoration(
                               border: Border(
-                                right: BorderSide(color: Colors.green, width: 3),
+                                right: BorderSide(
+                                  color: Colors.green,
+                                  width: 3,
+                                ),
                               ),
                             )
                           : null,
@@ -126,8 +142,9 @@ class _CategoryDetailsState extends State<CategoryDetails>
                             s.name,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontWeight:
-                                  isSelected ? FontWeight.bold : FontWeight.normal,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
                               color: isSelected ? Colors.black : Colors.grey,
                               fontSize: 12.sp,
                             ),
@@ -187,15 +204,30 @@ class _CategoryDetailsState extends State<CategoryDetails>
   }
 
   Widget _buildDividerWithTitle(String title) => Container(
-        margin: const EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          children: [
-            Expanded(child: Divider(color: Colors.grey.shade400, thickness: 0.8, endIndent: 10)),
-            Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-            Expanded(child: Divider(color: Colors.grey.shade400, thickness: 0.8, indent: 10)),
-          ],
+    margin: const EdgeInsets.symmetric(vertical: 10),
+    child: Row(
+      children: [
+        Expanded(
+          child: Divider(
+            color: Colors.grey.shade400,
+            thickness: 0.8,
+            endIndent: 10,
+          ),
         ),
-      );
+        Text(
+          title,
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        ),
+        Expanded(
+          child: Divider(
+            color: Colors.grey.shade400,
+            thickness: 0.8,
+            indent: 10,
+          ),
+        ),
+      ],
+    ),
+  );
 
   Widget _buildFilterBar() {
     return Container(
@@ -216,14 +248,28 @@ class _CategoryDetailsState extends State<CategoryDetails>
                   String tempSelected = selectedSortOption;
                   return StatefulBuilder(
                     builder: (context, setStateModal) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 12,
+                      ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Sort by", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          const Text(
+                            "Sort by",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           const SizedBox(height: 12),
-                          for (final opt in const ["Relevance (default)", "Price (low to high)", "Price (high to low)", "Discount (high to low)"])
+                          for (final opt in const [
+                            "Relevance (default)",
+                            "Price (low to high)",
+                            "Price (high to low)",
+                            "Discount (high to low)",
+                          ])
                             RadioListTile<String>(
                               activeColor: Colors.green,
                               title: Text(opt),
@@ -241,13 +287,20 @@ class _CategoryDetailsState extends State<CategoryDetails>
                 },
               );
 
-              if (selected != null) setState(() => selectedSortOption = selected);
+              if (selected != null)
+                setState(() => selectedSortOption = selected);
             },
             child: Row(
               children: [
                 Icon(CupertinoIcons.slider_horizontal_3, size: 18.sp),
                 const SizedBox(width: 4),
-                Text("Sort", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12.sp)),
+                Text(
+                  "Sort",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.sp,
+                  ),
+                ),
               ],
             ),
           ),
@@ -270,14 +323,18 @@ class _CategoryDetailsState extends State<CategoryDetails>
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: Column(
             children: [
-              Container(height: MediaQuery.of(context).padding.top, color: AppsColors.primary),
+              Container(
+                height: MediaQuery.of(context).padding.top,
+                color: AppsColors.primary,
+              ),
               _buildAppBarContent(),
             ],
           ),
         ),
         body: BlocBuilder<CategoryDetailsBloc, CategoryDetailsState>(
           builder: (_, state) {
-            if (state.status == CategoryDetailsStatus.loading && state.details == null) {
+            if (state.status == CategoryDetailsStatus.loading &&
+                state.details == null) {
               return const Center(child: CircularProgressIndicator());
             }
             if (state.status == CategoryDetailsStatus.failure) {
@@ -286,7 +343,12 @@ class _CategoryDetailsState extends State<CategoryDetails>
 
             final details = state.details;
             if (details == null) return const Center(child: Text('No data'));
-            selectedSubCategoryId.value ??= details.subcategories.first.id;
+
+            if (details.subcategories.isNotEmpty) {
+              selectedSubCategoryId.value ??= details.subcategories.first.id;
+            } else {
+              selectedSubCategoryId.value = null; // या कोई fallback
+            }
 
             return Row(
               children: [
@@ -299,7 +361,9 @@ class _CategoryDetailsState extends State<CategoryDetails>
                       Expanded(
                         child: ScrollablePositionedList.builder(
                           itemCount: details.subcategories.length,
-                          itemBuilder: (_, index) => _buildSubcategoryItem(details.subcategories[index]),
+                          itemBuilder: (_, index) => _buildSubcategoryItem(
+                            details.subcategories[index],
+                          ),
                           itemScrollController: itemScrollController,
                           itemPositionsListener: itemPositionsListener,
                           physics: const BouncingScrollPhysics(),
@@ -317,40 +381,61 @@ class _CategoryDetailsState extends State<CategoryDetails>
   }
 
   Widget _buildAppBarContent() => Container(
-        color: AppsColors.primary,
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: () => NavHelper.backTocategorydetails(),
-              child: Container(
-                width: 35.w,
-                height: 35.w,
-                decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                child: Center(child: Icon(CupertinoIcons.back, size: 22.sp, color: AppsColors.primary)),
+    color: AppsColors.primary,
+    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
+    child: Row(
+      children: [
+        GestureDetector(
+          onTap: () => NavHelper.backTocategorydetails(),
+          child: Container(
+            width: 35.w,
+            height: 35.w,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Icon(
+                CupertinoIcons.back,
+                size: 22.sp,
+                color: AppsColors.primary,
               ),
             ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      style: TextStyle(fontSize: 27.sp, color: Colors.white),
-                      children: const [
-                        TextSpan(text: "mohalla ", style: TextStyle(fontFamily: 'Geometry')),
-                        TextSpan(text: "bazaar", style: TextStyle(fontFamily: 'Geometry', color: Colors.white)),
-                      ],
-                    ),
-                  ),
-                  Text("Delivery in 30 minutes", style: TextStyle(fontSize: 12.sp, color: Colors.white)),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
-      );
+        SizedBox(width: 12.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              RichText(
+                text: TextSpan(
+                  style: TextStyle(fontSize: 27.sp, color: Colors.white),
+                  children: const [
+                    TextSpan(
+                      text: "mohalla ",
+                      style: TextStyle(fontFamily: 'Geometry'),
+                    ),
+                    TextSpan(
+                      text: "bazaar",
+                      style: TextStyle(
+                        fontFamily: 'Geometry',
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                "Delivery in 30 minutes",
+                style: TextStyle(fontSize: 12.sp, color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 // ---------------- Product Card ---------------- //
@@ -394,9 +479,17 @@ class _BestsellerCard1State extends State<BestsellerCard1>
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(8.r),
-                        border: Border.all(color: Colors.grey.withOpacity(0.6), width: 0.5),
+                        border: Border.all(
+                          color: Colors.grey.withOpacity(0.6),
+                          width: 0.5,
+                        ),
                       ),
-                      child: SmartCachedImage(imageUrl: p.image, width: 60, height: 60, fit: BoxFit.contain),
+                      child: SmartCachedImage(
+                        imageUrl: p.image,
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                   Positioned(
@@ -406,7 +499,11 @@ class _BestsellerCard1State extends State<BestsellerCard1>
                       valueListenable: isFavorite,
                       builder: (_, fav, __) => GestureDetector(
                         onTap: () => isFavorite.value = !fav,
-                        child: Icon(fav ? Icons.favorite : Icons.favorite_border, color: Colors.red, size: 18.sp),
+                        child: Icon(
+                          fav ? Icons.favorite : Icons.favorite_border,
+                          color: Colors.red,
+                          size: 18.sp,
+                        ),
                       ),
                     ),
                   ),
@@ -414,9 +511,22 @@ class _BestsellerCard1State extends State<BestsellerCard1>
                     top: 6,
                     left: 6,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(4.r)),
-                      child: Text("Bestseller", style: TextStyle(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.bold)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                      child: Text(
+                        "Bestseller",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -430,17 +540,40 @@ class _BestsellerCard1State extends State<BestsellerCard1>
               children: [
                 _buildPriceRow(p),
                 const SizedBox(height: 4),
-                Text(p.quantity, style: TextStyle(fontSize: 11.sp, color: AppsColors.textclourgray)),
+                Text(
+                  p.quantity,
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: AppsColors.textclourgray,
+                  ),
+                ),
                 if (p.saveAmount > 0) ...[
                   const SizedBox(height: 4),
-                  Text("SAVE ₹${p.saveAmount}", style: TextStyle(fontSize: 11.sp, color: AppsColors.savetextclour)),
+                  Text(
+                    "SAVE ₹${p.saveAmount}",
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      color: AppsColors.savetextclour,
+                    ),
+                  ),
                 ],
                 const SizedBox(height: 4),
-                Text(p.productName, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.sp)),
+                Text(
+                  p.productName,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 12.sp),
+                ),
                 const SizedBox(height: 6),
                 _buildRatingRow(p),
                 const SizedBox(height: 6),
-                Text(p.time, style: TextStyle(color: AppsColors.textclourgray, fontSize: 10.sp)),
+                Text(
+                  p.time,
+                  style: TextStyle(
+                    color: AppsColors.textclourgray,
+                    fontSize: 10.sp,
+                  ),
+                ),
               ],
             ),
           ),
@@ -450,21 +583,37 @@ class _BestsellerCard1State extends State<BestsellerCard1>
   }
 
   Row _buildPriceRow(ProductEntity p) => Row(
-        children: [
-          Text("₹${p.discountPrice}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11.sp)),
-          const SizedBox(width: 5),
-          if (p.price != p.discountPrice)
-            Text("₹${p.price}", style: TextStyle(fontSize: 11.sp, color: AppsColors.textclourgray, decoration: TextDecoration.lineThrough)),
-        ],
-      );
+    children: [
+      Text(
+        "₹${p.discountPrice}",
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11.sp),
+      ),
+      const SizedBox(width: 5),
+      if (p.price != p.discountPrice)
+        Text(
+          "₹${p.price}",
+          style: TextStyle(
+            fontSize: 11.sp,
+            color: AppsColors.textclourgray,
+            decoration: TextDecoration.lineThrough,
+          ),
+        ),
+    ],
+  );
 
   Row _buildRatingRow(ProductEntity p) => Row(
-        children: [
-          Icon(Icons.star, color: Colors.green, size: 16.sp),
-          const SizedBox(width: 3),
-          Text(p.rating.toString(), style: TextStyle(fontSize: 12.sp, color: Colors.green)),
-          const SizedBox(width: 4),
-          Text("(${p.reviews})", style: TextStyle(fontSize: 10.sp, color: AppsColors.textclourgray)),
-        ],
-      );
+    children: [
+      Icon(Icons.star, color: Colors.green, size: 16.sp),
+      const SizedBox(width: 3),
+      Text(
+        p.rating.toString(),
+        style: TextStyle(fontSize: 12.sp, color: Colors.green),
+      ),
+      const SizedBox(width: 4),
+      Text(
+        "(${p.reviews})",
+        style: TextStyle(fontSize: 10.sp, color: AppsColors.textclourgray),
+      ),
+    ],
+  );
 }
