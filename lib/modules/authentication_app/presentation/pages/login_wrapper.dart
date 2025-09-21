@@ -18,7 +18,7 @@ class LoginWrapper extends StatelessWidget {
       return const Dashboard();
     } else {
       // ✅ Agar token null hai to login pe bhejo
-      return const LoginPage();
+      return const Dashboard();
     }
   }
 }

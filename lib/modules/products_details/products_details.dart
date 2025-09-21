@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:mohalla_bazaar/core/utils/app_colors.dart';
 import 'package:mohalla_bazaar/core/utils/nav_helper.dart';
+import 'package:mohalla_bazaar/core/utils/smartcachedImag.dart';
+import 'package:mohalla_bazaar/modules/categorydetails/domain/entities/categorydetails_entity.dart';
 
 class ProductsDetails extends StatefulWidget {
   const ProductsDetails({super.key});
@@ -14,14 +17,20 @@ class ProductsDetails extends StatefulWidget {
 
 class _ProductsDetailsState extends State<ProductsDetails> {
   final String title = 'Onion';
+// clicked product
 
+
+final String img1 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/5e44c2c3-8fa7-460f-8b1d-3fec37b77c1b/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg";
+final String img2 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/7ee467c5-ae84-4387-9fb8-1dcdeb651f14/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg";
+ 
   // List of image URLs for slider
-  final List<String> images = [
-    'https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/5e44c2c3-8fa7-460f-8b1d-3fec37b77c1b/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg',
-    'https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/7ee467c5-ae84-4387-9fb8-1dcdeb651f14/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg',
-    'https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/5346adc4-ce65-4c74-9d15-393674092b72/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg',
-    'https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/5e44c2c3-8fa7-460f-8b1d-3fec37b77c1b/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg',
-  ];
+  // final List<String> images = [
+  //   'https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/5e44c2c3-8fa7-460f-8b1d-3fec37b77c1b/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg',
+  //   'https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/7ee467c5-ae84-4387-9fb8-1dcdeb651f14/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg',
+  //   'https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/5346adc4-ce65-4c74-9d15-393674092b72/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg',
+  //   'https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/5e44c2c3-8fa7-460f-8b1d-3fec37b77c1b/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg',
+  // ];
+
 
   int qty = 1;
   bool isFavorite = false;
@@ -35,6 +44,13 @@ class _ProductsDetailsState extends State<ProductsDetails> {
   @override
   void initState() {
     super.initState();
+ SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.light,
+      ),
+    );
+// Output: ProductEntity(name: Mango, price: 120.0, image: http://...)
 
     _scrollController.addListener(() {
       double offset = _scrollController.offset;
@@ -55,8 +71,9 @@ class _ProductsDetailsState extends State<ProductsDetails> {
 
   @override
   Widget build(BuildContext context) {
+  final ProductEntity product = Get.arguments; 
     final double statusBarHeight = MediaQuery.of(context).padding.top;
-
+    final List<String> images = [img1, img2];
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -89,11 +106,12 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                               maxScale: 4.0, // maximum zoom scale
                               minScale:
                                   1.0, // minimum zoom scale (original size)
-                              child: Image.network(
-                                images[index],
-                                fit: BoxFit.cover,
+                                  child: SmartCachedImage(
+                                  imageUrl:  images[index],
+                                 fit: BoxFit.cover,
                                 width: double.infinity,
-                              ),
+                                ),
+                             
                             );
                           },
                         ),
@@ -151,8 +169,16 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
                       Row(
+                        
                         children: [
-                          const Text("Onion", style: TextStyle(fontSize: 20)),
+                          Expanded( // 👈 isse width constraint milega
+      child: Text(
+        product.productName,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontSize: 20),
+      ),
+    ),
                           const Spacer(),
                           GestureDetector(
                             onTap: () async {
@@ -170,14 +196,14 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                         ],
                       ),
                       Text(
-                        "Net Qty: 1 Pack (900 - 1000 Gm)",
+                        "Net Qty : ${product.quantity}",
                         style: TextStyle(color: Colors.grey),
                       ),
                       const SizedBox(height: 8),
                       Row(
-                        children: const [
+                        children:  [
                           Text(
-                            "₹26",
+                           product.discountPrice.toString() ,
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -185,7 +211,8 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                           ),
                           SizedBox(width: 8),
                           Text(
-                            "43% Off",
+                            "${calculateDiscountPercent(product.price, product.discountPrice).toStringAsFixed(0)}% OFF",
+                           
                             style: TextStyle(color: Colors.green, fontSize: 16),
                           ),
                         ],
@@ -195,7 +222,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                         TextSpan(
                           children: [
                             TextSpan(
-                              text: "₹46",
+                              text: product.price.toString(),
                               style: TextStyle(
                                 decoration: TextDecoration.lineThrough,
                                 color: Colors.grey,
@@ -227,7 +254,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
-                          children: const [
+                          children:  [
                             Icon(
                               Icons.flash_on,
                               color: Color(0xff014E20),
@@ -235,7 +262,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                             ),
                             SizedBox(width: 4),
                             Text(
-                              "Estimated Delivery Time: 23 mins",
+                              "Estimated Delivery Time: ${product.time}",
                               style: TextStyle(color: Color(0xff014E20)),
                             ),
                           ],
@@ -366,19 +393,58 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                         ),
                       ),
                     ),
+                     SizedBox(width: 10),
+Opacity(
+   opacity: _appBarOpacity,
+  child: Container(
+     
+                          width: 35.w,
+                          height: 35.w,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.rectangle,
+                          ),
+                          child: Center(
+                            
+                            child:  SmartCachedImage(
+                                    imageUrl:  product.image,
+                                 
+                                  ),
+                          ),
+                        ),
+),
 
                     SizedBox(width: 10),
                     Expanded(
                       child: Opacity(
                         opacity: _appBarOpacity,
-                        child: Text(
-                          title,
+
+                        
+                        child:
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+ Text(
+                          product.productName,
+                          maxLines: 1,
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
-                            fontSize: 20,
+                            fontSize: 15,
                           ),
                         ),
+                         Row(
+                        children:  [
+                        
+                          Text(
+                            "${calculateDiscountPercent(product.price, product.discountPrice).toStringAsFixed(0)}% OFF",
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                        ],)
+                        
                       ),
                     ),
                   ],
@@ -387,143 +453,82 @@ class _ProductsDetailsState extends State<ProductsDetails> {
             ),
 
             // Bottom cart bar fixed at bottom
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                color: Colors.white,
-                child: Row(
-                  children: [
-                    // View Cart Button
-                    InkWell(
-                      onTap: () {
-                        NavHelper.goToCartFromProductsDetails();
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 1.5,
-                          ),
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 10,
-                        ),
-                        child: Row(
-                          children: [
-                            Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                Icon(
-                                  Icons.shopping_cart_outlined,
-                                  size: 22,
-                                  color: Colors.black87,
-                                ),
-                                Positioned(
-                                  top: -10,
-                                  right: -10,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 7,
-                                      vertical: 2,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: const Color(
-                                        0xFFEC407A,
-                                      ), // Pink badge
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Text(
-                                      "9",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(width: 8),
-                            const Text(
-                              "View Cart",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black,
-                                fontSize: 17,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    // Counter Button
-                    Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEC407A),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.remove,
-                              color: Colors.white,
-                              size: 24,
-                            ),
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                            onPressed: () {
-                              setState(() {
-                                if (qty > 1) qty--;
-                              });
-                            },
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Text(
-                              qty.toString(),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.add,
-                              color: Colors.white,
-                              size: 24,
-                            ),
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                            onPressed: () {
-                              setState(() {
-                                qty++;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+           Positioned(
+  bottom: 0,
+  left: 0,
+  right: 0,
+  child: Container(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    color: Colors.white,
+    child: Row(
+      children: [
+        // 1️⃣ View Cart Button
+        Expanded(
+          child: ElevatedButton(
+            onPressed: () {
+              NavHelper.goToCartFromProductsDetails();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              side: BorderSide(color: Colors.grey.shade300, width: 1.5),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 14),
+            ),
+            child: const Text(
+              "View Cart",
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 17,
               ),
             ),
+          ),
+        ),
+        const SizedBox(width: 12),
+
+        // 2️⃣ Add to Cart Button
+        Expanded(
+          child: ElevatedButton(
+            onPressed: () {
+              // Add to cart logic here
+              print("Product added to cart");
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFEC407A),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 14),
+            ),
+            child: const Text(
+              "Add to Cart",
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 17,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  ),
+),
+
           ],
         ),
       ),
     );
   }
 }
+double calculateDiscountPercent(num price, num discountPrice) {
+  double originalPrice = price.toDouble();
+  double discounted = discountPrice.toDouble();
+
+  if (originalPrice <= 0) return 0; // divide by zero se bachne ke liye
+  double discount = originalPrice - discounted;
+  return (discount / originalPrice) * 100;
+}
+

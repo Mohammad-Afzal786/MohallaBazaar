@@ -8,6 +8,7 @@ import 'package:mohalla_bazaar/modules/authentication_app/data/models/register_r
 import 'package:mohalla_bazaar/modules/authentication_app/data/models/resetpassword_request.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/data/models/resetpassword_response.dart';
 import 'package:mohalla_bazaar/modules/category/data/model/category_response.dart';
+import 'package:mohalla_bazaar/modules/categorydetails/data/model/categorydetails_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'api_client.g.dart';
@@ -38,7 +39,10 @@ abstract class ApiClient {
   @Extra({"requiresToken": false})
   Future<CategoryResponse> getCategories();
 
-
+/// Category details / products endpoint (your example: getproducts?categoryId=...)
+  @GET("/getproducts")
+  @Extra({"requiresToken": false})
+  Future<CategoryDetailsResponse> getProducts(@Query("categoryId") String categoryId);
 
 
 }

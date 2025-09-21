@@ -19,6 +19,12 @@ import 'package:mohalla_bazaar/modules/category/data/repositories/categories_rep
 import 'package:mohalla_bazaar/modules/category/domain/repositories/categories_repository.dart';
 import 'package:mohalla_bazaar/modules/category/domain/usecases/get_categories_usecase.dart';
 import 'package:mohalla_bazaar/modules/category/presentation/bloc/categories_bloc.dart';
+import 'package:mohalla_bazaar/modules/categorydetails/data/datasources/categoriesdetails_local_data_source.dart';
+import 'package:mohalla_bazaar/modules/categorydetails/data/datasources/categoriesdetails_remote_data_source.dart';
+import 'package:mohalla_bazaar/modules/categorydetails/data/repositories/categorydetails_repository_impl.dart';
+import 'package:mohalla_bazaar/modules/categorydetails/domain/repositories/categorydetails_repository.dart';
+import 'package:mohalla_bazaar/modules/categorydetails/domain/usecases/get_categorydetails_usecase.dart';
+import 'package:mohalla_bazaar/modules/categorydetails/presentation/bloc/categorydetails_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -64,5 +70,26 @@ Future<void> initInjection({required String baseUrl}) async {
   sl.registerFactory<CategoriesBloc>(() => CategoriesBloc(sl()));
 
 
+
+
+
+
+
+
+// Remote & Local
+  sl.registerLazySingleton<CategoriesDetailsRemoteDataSource>(() => CategoriesDetailsRemoteDataSourceImpl(api));
+  sl.registerLazySingleton<CategoriesDetailsLocalDataSource>(() => CategoriesDetailsLocalDataSourceImpl());
+
+  // Repository
+  sl.registerLazySingleton<CategoryDetailsRepository>(() => CategoryDetailsRepositoryImpl(
+        remote: sl(),
+        local: sl(),
+      ));
+
+  // UseCase
+  sl.registerLazySingleton<GetCategoryDetailsUseCase>(() => GetCategoryDetailsUseCase(sl()));
+
+  // Bloc
+  sl.registerFactory(() => CategoryDetailsBloc(sl()));
 
 }

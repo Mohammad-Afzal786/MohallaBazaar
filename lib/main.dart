@@ -8,8 +8,7 @@ import 'package:mohalla_bazaar/core/network/isar_client.dart'; // 👈 Isar serv
 import 'package:mohalla_bazaar/modules/deshboard/controllers/dashboard_controller.dart';
 import 'app.dart';
 
-const String baseUrl = "http://10.0.2.2:3000/api/";
-
+const String baseUrl = "https://mohallabazaarapi.onrender.com/api/";
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

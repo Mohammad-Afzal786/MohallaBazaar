@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:mohalla_bazaar/config/routes.dart';
+import 'package:mohalla_bazaar/modules/categorydetails/domain/entities/categorydetails_entity.dart';
 import 'package:mohalla_bazaar/modules/deshboard/controllers/dashboard_controller.dart';
 
 class NavHelper {
@@ -106,17 +107,24 @@ class NavHelper {
   /// ======================
   /// 🚀 Other Pages
   /// ======================
-  static void goToproducsdetails() {
+  static void goToproducsdetails({required ProductEntity product}) {
     if (Get.currentRoute != AppRoutes.productsdetails) {
-      Get.toNamed(AppRoutes.productsdetails);
+      Get.toNamed(
+        AppRoutes.productsdetails,
+        arguments: product, // yahan product pass karna hai
+        );
     }
   }
 
-  static void goTocategorydetails() {
-    if (Get.currentRoute != AppRoutes.categorydetails) {
-      Get.toNamed(AppRoutes.categorydetails);
-    }
+ static void goTocategorydetails(String categoryId) {
+  if (Get.currentRoute != AppRoutes.categorydetails) {
+    Get.toNamed(
+      AppRoutes.categorydetails,
+      arguments: categoryId, // yahan dynamic ID
+    );
   }
+}
+
 
   static void goTowishlist() {
     if (Get.currentRoute != AppRoutes.wishlist) {

@@ -8,7 +8,7 @@ plugins {
 android {
    
     namespace = "com.example.mohalla_bazaar"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

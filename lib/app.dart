@@ -14,6 +14,7 @@ import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/logi
 import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/ragistar_bloc.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/presentation/bloc/resetpassword_bloc.dart';
 import 'package:mohalla_bazaar/modules/category/presentation/bloc/categories_bloc.dart';
+import 'package:mohalla_bazaar/modules/categorydetails/presentation/bloc/categorydetails_bloc.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
             BlocProvider(create: (_) => sl<ForgotPassBloc>()),
             BlocProvider(create: (_) => sl<ResetPasswordBloc>()),
              BlocProvider(create: (_) => sl<CategoriesBloc>()),
-            //  BlocProvider(create: (_) => sl<CategoriesDetailsBloc>()),
+              BlocProvider(create: (_) => sl<CategoryDetailsBloc>()),
           ],
           child: GetMaterialApp(
             debugShowCheckedModeBanner: false,

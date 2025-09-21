@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 enum SlideDirection { leftToRight, rightToLeft }
 
 class SlidePageTransition extends CustomTransition {
   final SlideDirection direction;
 
   SlidePageTransition(this.direction);
+
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 400);
+
+  @override
+  Duration get reverseTransitionDuration => const Duration(milliseconds: 400);
 
   @override
   Widget buildTransition(
@@ -33,6 +38,7 @@ class SlidePageTransition extends CustomTransition {
         break;
     }
 
+    // ✅ Sirf ek hi SlideTransition (forward + back dono ke liye ye hi chalega)
     return SlideTransition(
       position: Tween<Offset>(
         begin: beginOffset,

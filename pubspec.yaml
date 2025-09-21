@@ -46,6 +46,7 @@ dependencies:
   #isar
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
+  scrollable_positioned_list: ^0.3.8
 
 dev_dependencies:
   flutter_test:

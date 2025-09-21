@@ -8,12 +8,13 @@ import 'package:mohalla_bazaar/modules/coinwallet/coinwallet.dart';
 import 'package:mohalla_bazaar/modules/deshboard/deshboard.dart';
 import 'package:mohalla_bazaar/modules/notification/notificatoin.dart';
 import 'package:mohalla_bazaar/modules/products_search/products_search.dart';
-import 'package:mohalla_bazaar/modules/categorydetails/category_details.dart';
+import 'package:mohalla_bazaar/modules/categorydetails/presentation/pages/category_details.dart';
 import 'package:mohalla_bazaar/modules/profile/profile.dart';
 import 'package:mohalla_bazaar/modules/wishlist/wishlist.dart';
 import 'package:mohalla_bazaar/modules/onboarding/onboarding.dart';
 import 'package:mohalla_bazaar/modules/products_details/products_details.dart';
 import 'package:mohalla_bazaar/modules/splash/splashpage.dart';
+import 'package:mohalla_bazaar/presentation/transaction/noreversetransition.dart';
 
 class AppRoutes {
   // ✅ Route names (constants)
@@ -50,8 +51,8 @@ class AppRoutes {
     GetPage(
       name: dashboard,
       page: () => Dashboard(),
-
-      customTransition: SlidePageTransition(SlideDirection.rightToLeft),
+customTransition: NoReverseTransition(),
+      
     ),
     GetPage(
       name: productsdetails,

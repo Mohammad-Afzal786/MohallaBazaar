@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class UiHelper {
-  static CustomImage({required String img}) {
+  static Image CustomImage({required String img}) {
     return Image.asset("assets/images/$img");
   }
 
-  static CustomText(
+  static Text CustomText(
       {required String text,
       required Color color,
       required FontWeight fontweight,
@@ -20,7 +20,7 @@ class UiHelper {
           color: color),
     );
   }
-  static CustomTextField({required TextEditingController controller}){
+  static Container CustomTextField({required TextEditingController controller}){
     return Container(
       height: 40,
       
@@ -43,7 +43,7 @@ class UiHelper {
     );
   }
 
-  static CustomButton(VoidCallback callback){
+  static Container CustomButton(VoidCallback callback){
     return Container(
       height: 18,
       width: 30,

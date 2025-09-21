@@ -86,12 +86,18 @@ class _HomePageState extends State<HomePage> {
 
                 /// Header (App Name + Info)
                 SliverToBoxAdapter(
+                  
                   child: Container(
-                    color: AppsColors.primary, // Background white
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12.w,
-                      vertical: 10.h,
-                    ),
+                
+                    height: kToolbarHeight + MediaQuery.of(context).padding.top, 
+    // 👆 AppBar ki exact height (status bar + toolbar)
+    color: AppsColors.primary,
+    padding: EdgeInsets.only(
+      left: 12.w,
+      right: 12.w,
+      top: MediaQuery.of(context).padding.top, // status bar ke niche se start
+      
+    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,8 +181,7 @@ class _HomePageState extends State<HomePage> {
                                 SizedBox(width: 10.w),
                                 GestureDetector(
                                   onTap: () {
-                                    print("Notifications clicked!");
-                                    // 👇 yahan aap apna navigation ya API call kar sakte ho
+                                   
                                     NavHelper.goTowishlist();
                                   },
                                   child: Stack(
@@ -227,8 +232,7 @@ class _HomePageState extends State<HomePage> {
                                 // Notification Button
                                 GestureDetector(
                                   onTap: () {
-                                    print("Notifications clicked!");
-                                    // 👇 yahan aap apna navigation ya API call kar sakte ho
+                                    
                                     NavHelper.goTonotificatin();
                                   },
                                   child: Stack(
@@ -299,139 +303,209 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+SliverToBoxAdapter(
+  child: Container(
+    height: 120, // parent ki fixed height
+    width: double.infinity,
+    child: Stack(
+      fit: StackFit.expand,
+      children: [
+        // 1️⃣ Background GIF with bottom crop
+        ClipRect(
+          child: OverflowBox(
+            maxHeight: double.infinity, // GIF jitna bada h utna render ho
+            alignment: Alignment.topCenter, // upar se chipka rahe
+            child: Image.asset(
+              "assets/images/welcomedesign.gif",
+              width: double.infinity,
+              fit: BoxFit.cover, // width fill karega
+            ),
+          ),
+        ),
 
-                SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      // Top welcome banner with bags
-                      Stack(
-                        children: [
-                          // Main Content Container (background color, text, images, etc.)
-                          Container(
-                            height: 80,
-
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: AppsColors.primary,
+        // 2️⃣ Foreground Content
+        Padding(
+          padding: const EdgeInsets.only(top: 30),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Center Text/Image Block
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/welcome.png",
+                      width: 180,
+                    ),
+                    const SizedBox(height: 5),
+                    Transform(
+                      transform: Matrix4.identity()..rotateX(-0.1),
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Maggi Ban’ne Se Pehle Delivery",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 6,
+                              color: Colors.black.withOpacity(0.4),
+                              offset: Offset(2, 2),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SmartCachedImage(
-                                  imageUrl:
-                                      "https://res.cloudinary.com/dlhbrpbfr/image/upload/w_470,ar_1200:1200,c_fit,f_auto,q_80/v1757772213/homepage1_qmr7uw.png",
-                                  width: 50,
-                                  height: 50,
-                                ),
-
-                                // Center text block
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        width: 180,
-
-                                        "assets/images/welcome.png",
-                                        fit: BoxFit.contain,
-                                      ),
-                                      SizedBox(height: 5),
-                                      Transform(
-                                        transform: Matrix4.identity()
-                                          ..rotateX(-0.1),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "Maggi Ban’ne Se Pehle Delivery",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w900,
-                                            color: Colors.white,
-
-                                            shadows: [
-                                              Shadow(
-                                                blurRadius: 6,
-                                                color: Colors.black.withOpacity(
-                                                  0.4,
-                                                ),
-                                                offset: Offset(2, 2),
-                                              ),
-                                            ],
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                SmartCachedImage(
-                                  imageUrl:
-                                      "https://res.cloudinary.com/dlhbrpbfr/image/upload/w_470,ar_1200:1200,c_fit,f_auto,q_80/v1757772213/homepage2_vdarqj.png",
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.contain,
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // Offers Banner at absolute bottom, overlaying the container
-                          // Positioned(
-                          //   left: 0,
-                          //   right: 0,
-                          //   bottom: -5, // Slight overlap as per your image
-                          //   child: Container(
-                          //    margin: EdgeInsets.symmetric(horizontal: 80),
-                          //     height: 25,
-                          //     decoration: BoxDecoration(
-                          //        color: Color(0xffF1C12F),
-                          //       borderRadius: BorderRadius.only(
-                          //         topLeft: Radius.circular(40),
-                          //         topRight: Radius.circular(40),
-                          //       ),
-                          //       boxShadow: [
-
-                          //       ],
-                          //     ),
-                          //     child: Row(
-                          //       mainAxisAlignment: MainAxisAlignment.center,
-                          //       children: [
-                          //         Text('✦', style: TextStyle(fontSize: 16,color: Color.fromARGB(255, 109, 76, 10),)),
-                          //         SizedBox(width: 5),
-                          //         Text(
-                          //           "OFFERS FOR YOU",
-                          //           style: TextStyle(
-                          //             fontWeight: FontWeight.bold,
-                          //             fontSize: 12,
-                          //             color: Color.fromARGB(255, 109, 76, 10),
-                          //             letterSpacing: 2,
-                          //           ),
-                          //         ),
-                          //         SizedBox(width: 5),
-                          //         Text('✦', style: TextStyle(fontSize: 16,color: Color.fromARGB(255, 109, 76, 10),)),
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
-                        ],
+                          ],
+                        ),
                       ),
-
-                      // Container(
-                      //   width: double.infinity,
-                      //   height: 70,
-                      // color: Color(0xffF1C12F),
-                      //   child: Column(
-                      //     children: [
-                      //       PromoOfferList(),
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
+
+             
+            ],
+          ),
+        ),
+      ],
+    ),
+  ),
+),
+
+                // SliverToBoxAdapter(
+                //   child: Column(
+                //     children: [
+                //       // Top welcome banner with bags
+                //       Stack(
+                //         children: [
+                //           // Main Content Container (background color, text, images, etc.)
+                //           Container(
+                //             height: 80,
+
+                //             width: double.infinity,
+                //             decoration: BoxDecoration(
+                //               color: AppsColors.primary,
+                //             ),
+                //             child: Row(
+                //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //               crossAxisAlignment: CrossAxisAlignment.center,
+                //               children: [
+                //                 SmartCachedImage(
+                //                   imageUrl:
+                //                       "https://res.cloudinary.com/dlhbrpbfr/image/upload/w_470,ar_1200:1200,c_fit,f_auto,q_80/v1757772213/homepage1_qmr7uw.png",
+                //                   width: 50,
+                //                   height: 50,
+                //                 ),
+
+                //                 // Center text block
+                //                 Expanded(
+                //                   child: Column(
+                //                     mainAxisAlignment: MainAxisAlignment.center,
+                //                     crossAxisAlignment:
+                //                         CrossAxisAlignment.center,
+                //                     children: [
+                //                       Image.asset(
+                //                         width: 180,
+
+                //                         "assets/images/welcome.png",
+                //                         fit: BoxFit.contain,
+                //                       ),
+                //                       SizedBox(height: 5),
+                //                       Transform(
+                //                         transform: Matrix4.identity()
+                //                           ..rotateX(-0.1),
+                //                         alignment: Alignment.center,
+                //                         child: Text(
+                //                           "Maggi Ban’ne Se Pehle Delivery",
+                //                           style: TextStyle(
+                //                             fontSize: 12,
+                //                             fontWeight: FontWeight.w900,
+                //                             color: Colors.white,
+
+                //                             shadows: [
+                //                               Shadow(
+                //                                 blurRadius: 6,
+                //                                 color: Colors.black.withOpacity(
+                //                                   0.4,
+                //                                 ),
+                //                                 offset: Offset(2, 2),
+                //                               ),
+                //                             ],
+                //                           ),
+                //                           textAlign: TextAlign.center,
+                //                         ),
+                //                       ),
+                //                     ],
+                //                   ),
+                //                 ),
+
+                //                 SmartCachedImage(
+                //                   imageUrl:
+                //                       "https://res.cloudinary.com/dlhbrpbfr/image/upload/w_470,ar_1200:1200,c_fit,f_auto,q_80/v1757772213/homepage2_vdarqj.png",
+                //                   width: 50,
+                //                   height: 50,
+                //                   fit: BoxFit.contain,
+                //                 ),
+                //               ],
+                //             ),
+                //           ),
+
+                //           // Offers Banner at absolute bottom, overlaying the container
+                //           // Positioned(
+                //           //   left: 0,
+                //           //   right: 0,
+                //           //   bottom: -5, // Slight overlap as per your image
+                //           //   child: Container(
+                //           //    margin: EdgeInsets.symmetric(horizontal: 80),
+                //           //     height: 25,
+                //           //     decoration: BoxDecoration(
+                //           //        color: Color(0xffF1C12F),
+                //           //       borderRadius: BorderRadius.only(
+                //           //         topLeft: Radius.circular(40),
+                //           //         topRight: Radius.circular(40),
+                //           //       ),
+                //           //       boxShadow: [
+
+                //           //       ],
+                //           //     ),
+                //           //     child: Row(
+                //           //       mainAxisAlignment: MainAxisAlignment.center,
+                //           //       children: [
+                //           //         Text('✦', style: TextStyle(fontSize: 16,color: Color.fromARGB(255, 109, 76, 10),)),
+                //           //         SizedBox(width: 5),
+                //           //         Text(
+                //           //           "OFFERS FOR YOU",
+                //           //           style: TextStyle(
+                //           //             fontWeight: FontWeight.bold,
+                //           //             fontSize: 12,
+                //           //             color: Color.fromARGB(255, 109, 76, 10),
+                //           //             letterSpacing: 2,
+                //           //           ),
+                //           //         ),
+                //           //         SizedBox(width: 5),
+                //           //         Text('✦', style: TextStyle(fontSize: 16,color: Color.fromARGB(255, 109, 76, 10),)),
+                //           //       ],
+                //           //     ),
+                //           //   ),
+                //           // ),
+                //         ],
+                //       ),
+
+                //       // Container(
+                //       //   width: double.infinity,
+                //       //   height: 70,
+                //       // color: Color(0xffF1C12F),
+                //       //   child: Column(
+                //       //     children: [
+                //       //       PromoOfferList(),
+                //       //     ],
+                //       //   ),
+                //       // ),
+                //     ],
+                //   ),
+                // ),
 
                 /// 🔹 Sections with Grid
                 SliverToBoxAdapter(child: _SectionTitle("Grocery & Kitchen")),
@@ -534,7 +608,7 @@ class _GridItemWidget extends StatelessWidget {
      children: [
   GestureDetector(
     onTap: () {
-      NavHelper.goTocategorydetails(); // fixed function name
+      NavHelper.goTocategorydetails("3df85226-54bb-4c6f-94f0-7e093b183813"); // fixed function name
     },
     child: Container(
       color: Colors.white,
