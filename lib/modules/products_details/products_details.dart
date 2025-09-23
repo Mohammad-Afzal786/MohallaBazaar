@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:mohalla_bazaar/core/utils/app_colors.dart';
 import 'package:mohalla_bazaar/core/utils/nav_helper.dart';
 import 'package:mohalla_bazaar/core/utils/smartcachedImag.dart';
-import 'package:mohalla_bazaar/modules/categorydetails/domain/entities/categorydetails_entity.dart';
+import 'package:mohalla_bazaar/modules/parent_category_details/domain/entities/parent_categorydetails_entity.dart';
+import 'package:mohalla_bazaar/modules/parent_category_details/domain/entities/product_entity.dart';
 
 class ProductsDetails extends StatefulWidget {
   const ProductsDetails({super.key});
@@ -17,12 +19,13 @@ class ProductsDetails extends StatefulWidget {
 
 class _ProductsDetailsState extends State<ProductsDetails> {
   final String title = 'Onion';
-// clicked product
+  // clicked product
 
+  final String img1 =
+      "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/5e44c2c3-8fa7-460f-8b1d-3fec37b77c1b/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg";
+  final String img2 =
+      "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/7ee467c5-ae84-4387-9fb8-1dcdeb651f14/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg";
 
-final String img1 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/5e44c2c3-8fa7-460f-8b1d-3fec37b77c1b/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg";
-final String img2 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/7ee467c5-ae84-4387-9fb8-1dcdeb651f14/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg";
- 
   // List of image URLs for slider
   // final List<String> images = [
   //   'https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/5e44c2c3-8fa7-460f-8b1d-3fec37b77c1b/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg',
@@ -30,7 +33,6 @@ final String img2 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176
   //   'https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/5346adc4-ce65-4c74-9d15-393674092b72/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg',
   //   'https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176-1176,pr-true,f-auto,q-80/cms/product_variant/5e44c2c3-8fa7-460f-8b1d-3fec37b77c1b/MAGGI-2-Minute-Instant-Noodles-Masala-Noodles-Made-With-Quality-Spices.jpeg',
   // ];
-
 
   int qty = 1;
   bool isFavorite = false;
@@ -44,13 +46,13 @@ final String img2 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176
   @override
   void initState() {
     super.initState();
- SystemChrome.setSystemUIOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.light,
       ),
     );
-// Output: ProductEntity(name: Mango, price: 120.0, image: http://...)
+    // Output: ProductEntity(name: Mango, price: 120.0, image: http://...)
 
     _scrollController.addListener(() {
       double offset = _scrollController.offset;
@@ -71,13 +73,52 @@ final String img2 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176
 
   @override
   Widget build(BuildContext context) {
-  final ProductEntity product = Get.arguments; 
+    final box = GetStorage();
+
+    // 1️⃣ Pehla product
+    final productslistfromcategorydetailspage = box.read(
+      'productslistfromcategorydetailspage',
+    );
+    ProductEntity? productfromcategorydetails;
+    if (productslistfromcategorydetailspage != null) {
+      productfromcategorydetails = ProductEntity.fromJson(
+        Map<String, dynamic>.from(productslistfromcategorydetailspage),
+      );
+    }
+
+    // 2️⃣ Dusra product
+    final productslistfromparentcategorydetailspage = box.read(
+      'productslistfromparentcategorydetailspage',
+    );
+    ProductEntity? productfromparentcategorydetails;
+    if (productslistfromparentcategorydetailspage != null) {
+      productfromparentcategorydetails = ProductEntity.fromJson(
+        Map<String, dynamic>.from(productslistfromparentcategorydetailspage),
+      );
+    }
+
+    // 3️⃣ Merge only non-null products
+    final merged = [
+      if (productfromcategorydetails != null) productfromcategorydetails,
+      if (productfromparentcategorydetails != null)
+        productfromparentcategorydetails,
+    ];
+
+    if (merged.isEmpty) {
+      return const Center(child: Text("No products available"));
+    }
+
+    // 4️⃣ Use merged list
+    final productToShow = merged.first; // example: first product
+
     final double statusBarHeight = MediaQuery.of(context).padding.top;
     final List<String> images = [img1, img2];
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) NavHelper.backToprducsdetails();
+        box.remove('productslistfromcategorydetailspage');
+        box.remove('productslistfromparentcategorydetailspage');
       },
       child: Scaffold(
         extendBodyBehindAppBar: true,
@@ -106,12 +147,11 @@ final String img2 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176
                               maxScale: 4.0, // maximum zoom scale
                               minScale:
                                   1.0, // minimum zoom scale (original size)
-                                  child: SmartCachedImage(
-                                  imageUrl:  images[index],
-                                 fit: BoxFit.cover,
+                              child: SmartCachedImage(
+                                imageUrl: images[index],
+                                fit: BoxFit.cover,
                                 width: double.infinity,
-                                ),
-                             
+                              ),
                             );
                           },
                         ),
@@ -169,16 +209,16 @@ final String img2 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
                       Row(
-                        
                         children: [
-                          Expanded( // 👈 isse width constraint milega
-      child: Text(
-        product.productName,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-        style: const TextStyle(fontSize: 20),
-      ),
-    ),
+                          Expanded(
+                            // 👈 isse width constraint milega
+                            child: Text(
+                              productToShow.productName,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ),
                           const Spacer(),
                           GestureDetector(
                             onTap: () async {
@@ -196,14 +236,14 @@ final String img2 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176
                         ],
                       ),
                       Text(
-                        "Net Qty : ${product.quantity}",
+                        "Net Qty : ${productToShow.productquantity}",
                         style: TextStyle(color: Colors.grey),
                       ),
                       const SizedBox(height: 8),
                       Row(
-                        children:  [
+                        children: [
                           Text(
-                           product.discountPrice.toString() ,
+                            productToShow.productdiscountPrice.toString(),
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -211,8 +251,8 @@ final String img2 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176
                           ),
                           SizedBox(width: 8),
                           Text(
-                            "${calculateDiscountPercent(product.price, product.discountPrice).toStringAsFixed(0)}% OFF",
-                           
+                            "${calculateDiscountPercent(productToShow.productprice, productToShow.productdiscountPrice).toStringAsFixed(0)}% OFF",
+
                             style: TextStyle(color: Colors.green, fontSize: 16),
                           ),
                         ],
@@ -222,7 +262,7 @@ final String img2 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176
                         TextSpan(
                           children: [
                             TextSpan(
-                              text: product.price.toString(),
+                              text: productToShow.productprice.toString(),
                               style: TextStyle(
                                 decoration: TextDecoration.lineThrough,
                                 color: Colors.grey,
@@ -254,7 +294,7 @@ final String img2 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
-                          children:  [
+                          children: [
                             Icon(
                               Icons.flash_on,
                               color: Color(0xff014E20),
@@ -262,7 +302,7 @@ final String img2 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176
                             ),
                             SizedBox(width: 4),
                             Text(
-                              "Estimated Delivery Time: ${product.time}",
+                              "Estimated Delivery Time: ${productToShow.producttime}",
                               style: TextStyle(color: Color(0xff014E20)),
                             ),
                           ],
@@ -376,7 +416,11 @@ final String img2 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176
                   children: [
                     /// Back Button
                     GestureDetector(
-                      onTap: () => NavHelper.backToprducsdetails(),
+                      onTap: () {
+                        box.remove('productslistfromcategorydetailspage');
+                        box.remove('productslistfromparentcategorydetailspage');
+                        NavHelper.backToprducsdetails();
+                      },
                       child: Container(
                         width: 35.w,
                         height: 35.w,
@@ -393,58 +437,55 @@ final String img2 = "https://cdn.zeptonow.com/production/ik-seo/tr:w-470,ar-1176
                         ),
                       ),
                     ),
-                     SizedBox(width: 10),
-Opacity(
-   opacity: _appBarOpacity,
-  child: Container(
-     
-                          width: 35.w,
-                          height: 35.w,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.rectangle,
-                          ),
-                          child: Center(
-                            
-                            child:  SmartCachedImage(
-                                    imageUrl:  product.image,
-                                 
-                                  ),
+                    SizedBox(width: 10),
+                    Opacity(
+                      opacity: _appBarOpacity,
+                      child: Container(
+                        width: 35.w,
+                        height: 35.w,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.rectangle,
+                        ),
+                        child: Center(
+                          child: SmartCachedImage(
+                            imageUrl: productToShow.productimage,
                           ),
                         ),
-),
+                      ),
+                    ),
 
                     SizedBox(width: 10),
                     Expanded(
                       child: Opacity(
                         opacity: _appBarOpacity,
 
-                        
-                        child:
-                        Column(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
- Text(
-                          product.productName,
-                          maxLines: 1,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                          ),
+                            Text(
+                              productToShow.productName,
+                              maxLines: 1,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "${calculateDiscountPercent(productToShow.productprice, productToShow.productdiscountPrice).toStringAsFixed(0)}% OFF",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                         Row(
-                        children:  [
-                        
-                          Text(
-                            "${calculateDiscountPercent(product.price, product.discountPrice).toStringAsFixed(0)}% OFF",
-                            style: TextStyle(color: Colors.white, fontSize: 12),
-                          ),
-                        ],
-                      ),
-                        ],)
-                        
                       ),
                     ),
                   ],
@@ -453,76 +494,86 @@ Opacity(
             ),
 
             // Bottom cart bar fixed at bottom
-           Positioned(
-  bottom: 0,
-  left: 0,
-  right: 0,
-  child: Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-    color: Colors.white,
-    child: Row(
-      children: [
-        // 1️⃣ View Cart Button
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () {
-              NavHelper.goToCartFromProductsDetails();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
-              side: BorderSide(color: Colors.grey.shade300, width: 1.5),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 14),
-            ),
-            child: const Text(
-              "View Cart",
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 17,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                color: Colors.white,
+                child: Row(
+                  children: [
+                    // 1️⃣ View Cart Button
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          box.remove('productslistfromcategorydetailspage');
+                          box.remove(
+                            'productslistfromparentcategorydetailspage',
+                          );
+                          NavHelper.goToCartFromProductsDetails();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          side: BorderSide(
+                            color: Colors.grey.shade300,
+                            width: 1.5,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: const Text(
+                          "View Cart",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
 
-        // 2️⃣ Add to Cart Button
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () {
-              // Add to cart logic here
-              print("Product added to cart");
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEC407A),
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
+                    // 2️⃣ Add to Cart Button
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Add to cart logic here
+                          print("Product added to cart");
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFEC407A),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: const Text(
+                          "Add to Cart",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 14),
             ),
-            child: const Text(
-              "Add to Cart",
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 17,
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-  ),
-),
-
           ],
         ),
       ),
     );
   }
 }
+
 double calculateDiscountPercent(num price, num discountPrice) {
   double originalPrice = price.toDouble();
   double discounted = discountPrice.toDouble();
@@ -531,4 +582,3 @@ double calculateDiscountPercent(num price, num discountPrice) {
   double discount = originalPrice - discounted;
   return (discount / originalPrice) * 100;
 }
-

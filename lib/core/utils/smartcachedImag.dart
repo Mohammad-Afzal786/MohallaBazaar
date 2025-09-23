@@ -12,7 +12,7 @@ class SmartCachedImage extends StatefulWidget {
     required this.imageUrl,
     this.width,
     this.height,
-    this.fit = BoxFit.cover,
+     this.fit = BoxFit.cover,
     super.key,
   });
 
@@ -40,6 +40,7 @@ class _SmartCachedImageState extends State<SmartCachedImage> {
       cacheManager: MyCacheManager(),
       imageUrl: widget.imageUrl,      // Always use URL
       width: widget.width,
+        fit: widget.fit,
       height: widget.height,
      
      

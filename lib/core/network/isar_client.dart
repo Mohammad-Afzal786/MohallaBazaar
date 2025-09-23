@@ -1,13 +1,9 @@
 // Path: lib/core/local/isar_client.dart
 import 'package:isar/isar.dart';
-import 'package:mohalla_bazaar/modules/categorydetails/data/model/categorydetails_cache_model.dart';
-import 'package:path_provider/path_provider.dart';
-
-// Models
 import 'package:mohalla_bazaar/modules/category/data/model/category_cache_model.dart';
-
-// Path: lib/core/local/isar_client.dart
-
+import 'package:mohalla_bazaar/modules/category_details/data/models/category_details_cache_model.dart';
+import 'package:mohalla_bazaar/modules/parent_category_details/data/model/parent_categorydetails_cache_model.dart';
+import 'package:path_provider/path_provider.dart';
 // Models
 
 class IsarClient {
@@ -19,7 +15,8 @@ class IsarClient {
     _isar = await Isar.open(
       [
         CategoryCacheModelSchema,
-        CategoryDetailsCacheSchema,
+        ParentCategoryDetailsCacheModelSchema, // Added
+        CategoryDetailsCacheModelSchema, // New table added
       ],
       directory: dir.path,
     );
@@ -51,42 +48,48 @@ class IsarClient {
     }
   }
 
+  
+
   // ============================================================
-  // 🔹 CATEGORY DETAILS CACHE (JSON STORAGE)
+  // 🔹 PARENT CATEGORY DETAILS CACHE
   // ============================================================
 
-  /// Save details
-  static Future<void> saveCategoryDetails(String categoryId, String json) async {
-    final cache = CategoryDetailsCache()
-      ..categoryId = categoryId
-      ..json = json
-      ..updatedAt = DateTime.now();
-
+static Future<void> saveParentCategoryDetails(List<ParentCategoryDetailsCacheModel> list) async {
     await _isar.writeTxn(() async {
-      await _isar.categoryDetailsCaches
-          .filter()
-          .categoryIdEqualTo(categoryId)
-          .deleteAll();
-
-      await _isar.categoryDetailsCaches.put(cache);
+      // Replace existing items for same parentCategoryId(s)
+      await _isar.parentCategoryDetailsCacheModels.clear();
+      await _isar.parentCategoryDetailsCacheModels.putAll(list);
     });
   }
 
-  /// Get details JSON
-  static Future<String?> getCategoryDetailsJson(String categoryId) async {
-    final cache = await _isar.categoryDetailsCaches
-        .filter()
-        .categoryIdEqualTo(categoryId)
-        .findFirst();
-    return cache?.json;
+  static Future<List<ParentCategoryDetailsCacheModel>> getParentCategoryDetails() async {
+    return _isar.parentCategoryDetailsCacheModels.where().findAll();
   }
 
-  /// Debug print
-  static Future<void> debugPrintCaches() async {
-    final list = await _isar.categoryDetailsCaches.where().findAll();
-    print("📂 CategoryDetails caches: ${list.length}");
+
+// ============================================================
+// 🔹 CATEGORY DETAILS CACHE
+// ============================================================
+
+static Future<void> saveCategoryDetails(List<CategoryDetailsCacheModel> list) async {
+    await _isar.writeTxn(() async {
+      // Replace existing items for same parentCategoryId(s)
+      await _isar.categoryDetailsCacheModels.clear();
+      await _isar.categoryDetailsCacheModels.putAll(list);
+       await debugPrintCategorieydetails();
+    });
+  }
+
+  static Future<List<CategoryDetailsCacheModel>> getCategoryDetails() async {
+    return _isar.categoryDetailsCacheModels.where().findAll();
+  }
+
+ static Future<void> debugPrintCategorieydetails() async {
+    final list = await _isar.categoryDetailsCacheModels.where().findAll();
+    print("📦 Categorieydetails in cache: ${list.length}");
     for (final c in list) {
-      print("➡️ categoryId=${c.categoryId}, updatedAt=${c.updatedAt}");
+      print("➡️ ${c.id}: ${c.categoryId}");
     }
   }
+
 }

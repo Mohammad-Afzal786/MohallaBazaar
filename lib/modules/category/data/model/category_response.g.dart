@@ -24,27 +24,36 @@ Map<String, dynamic> _$CategoryResponseToJson(CategoryResponse instance) =>
 
 ParentCategory _$ParentCategoryFromJson(Map<String, dynamic> json) =>
     ParentCategory(
-      parentName: json['parentcategoryName'] as String,
+      parentName: json['parentCategoryName'] as String,
+      parentId: json['parentCategoryId'] as String,
+      parentImage: json['parentCategoryImage'] as String,
+      parentSubtitle: json['parentCategorytitle'] as String,
       categories: (json['categories'] as List<dynamic>)
-          .map((e) => SubCategory.fromJson(e as Map<String, dynamic>))
+          .map((e) => Category.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
 Map<String, dynamic> _$ParentCategoryToJson(ParentCategory instance) =>
     <String, dynamic>{
-      'parentcategoryName': instance.parentName,
+      'parentCategoryName': instance.parentName,
+      'parentCategoryId': instance.parentId,
+      'parentCategoryImage': instance.parentImage,
+      'parentCategorytitle': instance.parentSubtitle,
       'categories': instance.categories,
     };
 
-SubCategory _$SubCategoryFromJson(Map<String, dynamic> json) => SubCategory(
+Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
       id: json['_id'] as String,
       name: json['categoryName'] as String,
-      image: json['image'] as String,
+      image: json['categoryimage'] as String,
+      subtitle: json['categorysubtitle'] as String,
+      categoryId: json['categoryId'] as String,
     );
 
-Map<String, dynamic> _$SubCategoryToJson(SubCategory instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$CategoryToJson(Category instance) => <String, dynamic>{
       '_id': instance.id,
       'categoryName': instance.name,
-      'image': instance.image,
+      'categoryimage': instance.image,
+      'categorysubtitle': instance.subtitle,
+      'categoryId': instance.categoryId,
     };

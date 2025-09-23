@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:device_preview/device_preview.dart';
@@ -8,8 +9,8 @@ import 'package:mohalla_bazaar/core/network/isar_client.dart'; // 👈 Isar serv
 import 'package:mohalla_bazaar/modules/deshboard/controllers/dashboard_controller.dart';
 import 'app.dart';
 
-const String baseUrl = "https://mohallabazaarapi.onrender.com/api/";
-
+// const String baseUrl = "https://mohallabazaarapi.onrender.com/api/";
+const String baseUrl = "http://10.0.2.2:3000/api/";
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -25,7 +26,9 @@ Future<void> main() async {
 
   // ✅ DashboardController globally register (GetX)
   Get.put<DashboardController>(DashboardController(), permanent: true);
-
+await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
   // ✅ Run App
   runApp(
      

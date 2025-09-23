@@ -1,4 +1,3 @@
-// Path: lib/features/categories/data/models/category_response.dart
 import 'package:json_annotation/json_annotation.dart';
 
 part 'category_response.g.dart';
@@ -9,7 +8,11 @@ class CategoryResponse {
   final String message;
   final List<ParentCategory> data;
 
-  CategoryResponse({required this.success, required this.message, required this.data});
+  CategoryResponse({
+    required this.success,
+    required this.message,
+    required this.data,
+  });
 
   factory CategoryResponse.fromJson(Map<String, dynamic> json) =>
       _$CategoryResponseFromJson(json);
@@ -19,26 +22,57 @@ class CategoryResponse {
 
 @JsonSerializable()
 class ParentCategory {
-  @JsonKey(name: "parentcategoryName")
+  @JsonKey(name: "parentCategoryName")
   final String parentName;
-  final List<SubCategory> categories;
 
-  ParentCategory({required this.parentName, required this.categories});
+  @JsonKey(name: "parentCategoryId")
+  final String parentId;
+
+  @JsonKey(name: "parentCategoryImage")
+  final String parentImage;
+
+  @JsonKey(name: "parentCategorytitle")
+  final String parentSubtitle;
+
+  final List<Category> categories;
+
+  ParentCategory({
+    required this.parentName,
+    required this.parentId,
+    required this.parentImage,
+  required  this.parentSubtitle,
+    required this.categories,
+  });
 
   factory ParentCategory.fromJson(Map<String, dynamic> json) =>
       _$ParentCategoryFromJson(json);
 }
 
 @JsonSerializable()
-class SubCategory {
+class Category {
   @JsonKey(name: "_id")
   final String id;
+
   @JsonKey(name: "categoryName")
   final String name;
+
+  @JsonKey(name: "categoryimage")
   final String image;
 
-  SubCategory({required this.id, required this.name, required this.image});
+  @JsonKey(name: "categorysubtitle")
+  final String subtitle;
 
-  factory SubCategory.fromJson(Map<String, dynamic> json) =>
-      _$SubCategoryFromJson(json);
+  @JsonKey(name: "categoryId")
+  final String categoryId;
+
+  Category({
+    required this.id,
+    required this.name,
+    required this.image,
+   required this.subtitle,
+    required this.categoryId,
+  });
+
+  factory Category.fromJson(Map<String, dynamic> json) =>
+      _$CategoryFromJson(json);
 }

@@ -194,9 +194,45 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<CategoryDetailsResponse> getProducts(String categoryId) async {
+  Future<ParentCategoryDetailsResponse> getParentCategoryDetails(
+      String parentCategoryId) async {
     final _extra = <String, dynamic>{'requiresToken': false};
-    final queryParameters = <String, dynamic>{r'categoryId': categoryId};
+    final queryParameters = <String, dynamic>{
+      r'parentCategoryId': parentCategoryId
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ParentCategoryDetailsResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/getproducts',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ParentCategoryDetailsResponse _value;
+    try {
+      _value = ParentCategoryDetailsResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<CategoryDetailsResponse> getCategoryDetails(String CategoryId) async {
+    final _extra = <String, dynamic>{'requiresToken': false};
+    final queryParameters = <String, dynamic>{r'categoryId': CategoryId};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<CategoryDetailsResponse>(Options(
@@ -206,7 +242,7 @@ class _ApiClient implements ApiClient {
     )
         .compose(
           _dio.options,
-          '/getproducts',
+          '/getCategoryProducts',
           queryParameters: queryParameters,
           data: _data,
         )

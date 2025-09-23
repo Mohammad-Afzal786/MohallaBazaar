@@ -135,10 +135,7 @@ class _Header extends StatelessWidget {
               children: [
                 RichText(
                   text: TextSpan(
-                    style: TextStyle(
-                      fontSize: 27.sp,
-                      color: Colors.white,
-                    ),
+                    style: TextStyle(fontSize: 27.sp, color: Colors.white),
                     children: const [
                       TextSpan(
                         text: "mohalla ",
@@ -185,32 +182,28 @@ class _CategoriesListView extends StatelessWidget {
         physics: const ClampingScrollPhysics(),
         slivers: [
           SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, parentIndex) {
-                final parent = categories[parentIndex];
-                return Column(
-                  children: [
-                    SectionTitle(parent.parentName),
-                    GridView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: crossAxisCount,
-                        mainAxisSpacing: 1.h,
-                        crossAxisSpacing: 15.w,
-                        childAspectRatio: 80 / 120,
-                      ),
-                      itemCount: parent.categories.length,
-                      itemBuilder: (context, index) => CategoryGridItem(
-                        data: parent.categories[index],
-                      ),
+            delegate: SliverChildBuilderDelegate((context, parentIndex) {
+              final parent = categories[parentIndex];
+              return Column(
+                children: [
+                  SectionTitle(parent.parentName, parent.parentSubtitle),
+                  GridView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      mainAxisSpacing: 1.h,
+                      crossAxisSpacing: 15.w,
+                      childAspectRatio: 80 / 120,
                     ),
-                  ],
-                );
-              },
-              childCount: categories.length,
-            ),
+                    itemCount: parent.categories.length,
+                    itemBuilder: (context, index) =>
+                        CategoryGridItem(data: parent.categories[index]),
+                  ),
+                ],
+              );
+            }, childCount: categories.length),
           ),
           // Bottom Promo Card
           const SliverToBoxAdapter(
@@ -226,7 +219,7 @@ class _CategoriesListView extends StatelessWidget {
 
 /// Grid Item widget for sub-categories
 class CategoryGridItem extends StatelessWidget {
-  final SubCategoryEntity data;
+  final CategoryEntity data;
   const CategoryGridItem({super.key, required this.data});
 
   @override
@@ -236,7 +229,7 @@ class CategoryGridItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(15.r),
         onTap: () {
           // Navigate to category details
-          NavHelper.goTocategorydetails(data.id);
+           NavHelper.goTocategorydetails();
         },
         child: Column(
           children: [
@@ -319,53 +312,72 @@ class CategoryShimmerGrid extends StatelessWidget {
 /// Section title with gradient heading and subtitle
 class SectionTitle extends StatelessWidget {
   final String title;
-  const SectionTitle(this.title, {super.key});
+  final String parentSubtitle;
+  const SectionTitle(this.title, this.parentSubtitle, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      padding: const EdgeInsets.all(8),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Center(
-            child: GradientText(
-              title,
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _star(),
+              SizedBox(width: 5),
+              GradientText(
+                title,
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF09B40F), Color(0xFF006E13)],
+                ),
               ),
-              gradient: const LinearGradient(
-                colors: [
-                  Color.fromARGB(255, 4, 105, 7),
-                  Color.fromARGB(255, 42, 161, 62),
-                ],
-              ),
-            ),
+              SizedBox(width: 5),
+              _star(),
+            ],
           ),
           SizedBox(height: 6.h),
           Row(
             children: [
-              const Expanded(child: Divider(thickness: 1, color: Colors.grey)),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.w),
-                child: Text(
-                  "Freshness guaranteed",
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+              _lineGradient(startToEnd: true),
+              Text(
+                parentSubtitle,
+                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
               ),
-              const Expanded(child: Divider(thickness: 1, color: Colors.grey)),
+              _lineGradient(startToEnd: false),
             ],
           ),
-          SizedBox(height: 6.h),
         ],
       ),
     );
   }
+
+  Widget _star() => Text(
+    "*",
+    style: TextStyle(
+      fontSize: 18.sp,
+      fontWeight: FontWeight.bold,
+      color: AppsColors.primary,
+    ),
+  );
+
+   Widget _lineGradient({required bool startToEnd}) {
+    return Expanded(
+      child: Container(
+        height: 1,
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: startToEnd
+                ? [Colors.white, const Color(0xFF006E13)]
+                : [const Color(0xFF006E13), Colors.white],
+          ),
+        ),
+      ),
+    );
+  }
+
 }
 
 /// Simple gradient text widget
@@ -374,8 +386,12 @@ class GradientText extends StatelessWidget {
   final TextStyle style;
   final Gradient gradient;
 
-  const GradientText(this.text,
-      {super.key, required this.style, required this.gradient});
+  const GradientText(
+    this.text, {
+    super.key,
+    required this.style,
+    required this.gradient,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -383,9 +399,7 @@ class GradientText extends StatelessWidget {
       text,
       style: style.copyWith(
         foreground: Paint()
-          ..shader = gradient.createShader(
-            const Rect.fromLTWH(0, 0, 200, 70),
-          ),
+          ..shader = gradient.createShader(const Rect.fromLTWH(0, 0, 200, 70)),
       ),
     );
   }

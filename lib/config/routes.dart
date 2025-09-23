@@ -4,11 +4,12 @@ import 'package:mohalla_bazaar/modules/authentication_app/presentation/pages/res
 import 'package:mohalla_bazaar/modules/authentication_app/presentation/pages/createaccountpage.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/presentation/pages/forgetpass.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/presentation/pages/login_wrapper.dart';
+import 'package:mohalla_bazaar/modules/category_details/presentation/pages/category_details_page.dart';
 import 'package:mohalla_bazaar/modules/coinwallet/coinwallet.dart';
 import 'package:mohalla_bazaar/modules/deshboard/deshboard.dart';
 import 'package:mohalla_bazaar/modules/notification/notificatoin.dart';
 import 'package:mohalla_bazaar/modules/products_search/products_search.dart';
-import 'package:mohalla_bazaar/modules/categorydetails/presentation/pages/category_details.dart';
+import 'package:mohalla_bazaar/modules/parent_category_details/presentation/pages/parent_category_details.dart';
 import 'package:mohalla_bazaar/modules/profile/profile.dart';
 import 'package:mohalla_bazaar/modules/wishlist/wishlist.dart';
 import 'package:mohalla_bazaar/modules/onboarding/onboarding.dart';
@@ -29,34 +30,41 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String coinwallet = '/coinwallet';
   static const String notification = '/notification';
+  static const String parentcategorydetails = '/Parentcategorydetails';
   static const String categorydetails = '/categorydetails';
   static const String productssearch = '/productssearch';
   static const String productsdetails = '/productsdetails';
-   static const String resetpassword = '/resetpassword';
+  static const String resetpassword = '/resetpassword';
   // ✅ Route pages
   static final List<GetPage> pages = [
     GetPage(name: splash, page: () => SplashPage()),
     GetPage(name: onbording, page: () => OnboardingPage()),
- GetPage(name: createAccount, page: () => CreateAccountPage()),
-  GetPage(name: forgetPassword, page: () => ForgotPasswordScreen()),
-   GetPage(
-  name: AppRoutes.resetpassword,
-  page: () {
-    final args = Get.arguments as Map<String, dynamic>;
-    return ResetPasswordScreen(userId: args["userId"]);
-  },
-),
+    GetPage(name: createAccount, page: () => CreateAccountPage()),
+    GetPage(name: forgetPassword, page: () => ForgotPasswordScreen()),
+    GetPage(
+      name: AppRoutes.resetpassword,
+      page: () {
+        final args = Get.arguments as Map<String, dynamic>;
+        return ResetPasswordScreen(userId: args["userId"]);
+      },
+    ),
 
     GetPage(name: login, page: () => const LoginWrapper()),
     GetPage(
       name: dashboard,
       page: () => Dashboard(),
-customTransition: NoReverseTransition(),
-      
+      customTransition: NoReverseTransition(),
     ),
     GetPage(
       name: productsdetails,
       page: () => ProductsDetails(),
+      customTransition: SlidePageTransition(SlideDirection.rightToLeft),
+    ),
+    GetPage(
+      name: categorydetails,
+       page: () {
+        return CategoryDetailsPage();
+      },
       customTransition: SlidePageTransition(SlideDirection.rightToLeft),
     ),
     GetPage(
@@ -80,9 +88,9 @@ customTransition: NoReverseTransition(),
       customTransition: SlidePageTransition(SlideDirection.rightToLeft),
     ),
     GetPage(
-      name: AppRoutes.categorydetails,
+      name: AppRoutes.parentcategorydetails,
       page: () {
-        return CategoryDetails();
+        return ParentCategoryDetailsPage();
       },
       customTransition: SlidePageTransition(SlideDirection.rightToLeft),
     ),

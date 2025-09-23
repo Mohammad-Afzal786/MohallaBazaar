@@ -1,7 +1,8 @@
 import 'package:get/get.dart';
 import 'package:mohalla_bazaar/config/routes.dart';
-import 'package:mohalla_bazaar/modules/categorydetails/domain/entities/categorydetails_entity.dart';
+import 'package:mohalla_bazaar/modules/parent_category_details/domain/entities/parent_categorydetails_entity.dart';
 import 'package:mohalla_bazaar/modules/deshboard/controllers/dashboard_controller.dart';
+import 'package:mohalla_bazaar/modules/parent_category_details/domain/entities/product_entity.dart';
 
 class NavHelper {
   /// ======================
@@ -107,20 +108,28 @@ class NavHelper {
   /// ======================
   /// 🚀 Other Pages
   /// ======================
-  static void goToproducsdetails({required ProductEntity product}) {
+  static void goToproducsdetails() {
     if (Get.currentRoute != AppRoutes.productsdetails) {
       Get.toNamed(
         AppRoutes.productsdetails,
-        arguments: product, // yahan product pass karna hai
+       
         );
     }
   }
 
- static void goTocategorydetails(String categoryId) {
+ static void goToparentcategorydetails(String parentcategoryId) {
+  if (Get.currentRoute != AppRoutes.parentcategorydetails) {
+    Get.toNamed(
+      AppRoutes.parentcategorydetails,
+      arguments: parentcategoryId, // yahan dynamic ID
+    );
+  }
+}
+static void goTocategorydetails() {
   if (Get.currentRoute != AppRoutes.categorydetails) {
     Get.toNamed(
       AppRoutes.categorydetails,
-      arguments: categoryId, // yahan dynamic ID
+     
     );
   }
 }
@@ -239,6 +248,16 @@ class NavHelper {
     }
   }
 
+  static void backToparentcategorydetails() {
+    if (Get.currentRoute == AppRoutes.parentcategorydetails) {
+      Get.back();
+     
+    } else {
+      Get.offAllNamed(AppRoutes.dashboard);
+      final controller = Get.find<DashboardController>();
+        controller.changeTab(0);
+    }
+  }
   static void backTocategorydetails() {
     if (Get.currentRoute == AppRoutes.categorydetails) {
       Get.back();

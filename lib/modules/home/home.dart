@@ -1,18 +1,24 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:mohalla_bazaar/core/utils/smartcachedImag.dart';
+import 'package:shimmer/shimmer.dart';
+
 import 'package:mohalla_bazaar/core/utils/app_colors.dart';
 import 'package:mohalla_bazaar/core/utils/nav_helper.dart';
+import 'package:mohalla_bazaar/core/utils/smartcachedImag.dart';
+import 'package:mohalla_bazaar/modules/category/domain/entities/category_entity.dart';
+import 'package:mohalla_bazaar/modules/category/presentation/bloc/categories_bloc.dart';
+import 'package:mohalla_bazaar/modules/category/presentation/bloc/categories_event.dart';
+import 'package:mohalla_bazaar/modules/category/presentation/bloc/categories_state.dart';
 import 'package:mohalla_bazaar/modules/deshboard/controllers/dashboard_controller.dart';
-import 'package:mohalla_bazaar/modules/deshboard/widgets/uihelper.dart';
+import 'package:mohalla_bazaar/presentation/widgets/bottomfootercard.dart';
 import 'package:mohalla_bazaar/presentation/widgets/searchbarwidget.dart';
 
-import '../../presentation/widgets/bottomfootercard.dart';
+// ------------------ HomePage ------------------
 
-/// 🔹 Category Page
-/// Responsive UI with ScreenUtil + Clean Code
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -23,272 +29,66 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController searchController = TextEditingController();
 
-  /// 🔹 Mock Data (You can fetch from API later)
-  final List<Map<String, String>> grocerykitchen = [
-    {"id": "g1", "img": "image 41.png", "text": "Vegetables & Fruits"},
-  ];
-
-  final List<Map<String, String>> secondgrocery = [
-    {"img": "image 21.png", "text": "Dry Fruits & Cereals"},
-    {"img": "image 22.png", "text": "Kitchen & Appliances"},
-    {"img": "image 23.png", "text": "Tea & Coffees"},
-    {"img": "image 24.png", "text": "Ice Creams & much more"}
-  ];
-
-  final List<Map<String, String>> snacksanddrinks = [
-    {"img": "image 35.png", "text": "Beauty & Cosmetics"},
-    {"img": "image 36.png", "text": "Skin Care"},
-    {"img": "image 37.png", "text": "Hair Care"},
-    {"img": "image 38.png", "text": "Makeup"}
-  ];
-
-  final List<Map<String, String>> beauty = [
-   {"img": "image 39.png", "text": "Cleaning Essentials"},
-    {"img": "image 40.png", "text": "Home Utilities"},
-    {"img": "image 41.png", "text": "Kitchen Tools"},
-    {"img": "image 42.png", "text": "Laundry Care"}
-  ];
+  final Map<String, dynamic> buyAgainJson = {
+    "heading": "Your Time, Our Priority—Delivered Fast",
+    "subtitle": "All in One Place",
+    "categories": [
+      {
+        "id": "PC-0001",
+        "category_name": "Mobile",
+        "category_image":
+            "https://img.freepik.com/premium-photo/composition-with-empty-page-candle-mortar-historic-old-pharmacy-bottles-with-label-wooden-background_392895-447325.jpg",
+      },
+      {
+        "id": "PC-0001",
+        "category_name": "Dairy Products",
+        "category_image":
+            "https://img.freepik.com/free-vector/social-media-concept-with-antigravity-smartphone_23-2148276983.jpg",
+      },
+      
+      
+    ],
+  };
 
   @override
   void initState() {
     super.initState();
 
-    /// Set status bar theme
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.light,
       ),
     );
+
+    Future.microtask(() {
+      context.read<CategoriesBloc>().add(CategoriesRequested());
+    });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final DashboardController controller = Get.put(DashboardController());
-    final int crossAxisCount = (MediaQuery.of(context).size.width / 90).floor();
+    final mediaQuery = MediaQuery.of(context);
+    Get.put(DashboardController()); // init dashboard controller
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          /// 🔹 Status bar padding (colored background)
-          Container(
-            height: MediaQuery.of(context).padding.top,
-            color: AppsColors.primary,
-          ),
-
-          /// 🔹 Main Scrollable Content
+          Container(height: mediaQuery.padding.top, color: AppsColors.primary),
           Expanded(
             child: CustomScrollView(
               physics: const ClampingScrollPhysics(),
               slivers: [
-                SliverToBoxAdapter(child: Container(color: AppsColors.primary)),
-
-                /// Header (App Name + Info)
                 SliverToBoxAdapter(
-                  
-                  child: Container(
-                
-                    height: kToolbarHeight + MediaQuery.of(context).padding.top, 
-    // 👆 AppBar ki exact height (status bar + toolbar)
-    color: AppsColors.primary,
-    padding: EdgeInsets.only(
-      left: 12.w,
-      right: 12.w,
-      top: MediaQuery.of(context).padding.top, // status bar ke niche se start
-      
-    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            /// 🔹 Left logo box
-                            InkWell(
-                              borderRadius: BorderRadius.circular(
-                                50,
-                              ), // 👈 ripple circle ke andar rahe
-                              onTap: () {
-                                NavHelper.goToProfile();
-                              },
-                              child: Container(
-                                width: 35.w,
-                                height: 35.w,
-                                decoration: const BoxDecoration(
-                                  color: Color.fromARGB(255, 250, 250, 250),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Center(
-                                  child: Icon(
-                                    Icons.person,
-                                    size: 22.sp,
-                                    color: AppsColors.primary,
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(width: 12.w),
-
-                            /// 🔹 Center App name + info
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      style: TextStyle(
-                                        fontSize: 27.sp,
-
-                                        color: Colors.white,
-                                      ),
-                                      children: [
-                                        const TextSpan(
-                                          text: "mohalla ",
-                                          style: TextStyle(
-                                            fontFamily: 'Geometry',
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text: "bazaar",
-
-                                          style: TextStyle(
-                                            fontFamily: 'Geometry',
-
-                                            color: Color(0xffffffff),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  Text(
-                                    "Delivery in 30 minutes",
-                                    style: TextStyle(
-                                      fontSize: 12.sp,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            /// 🔹 Right side (icons)
-                            Row(
-                              children: [
-                                SizedBox(width: 10.w),
-                                GestureDetector(
-                                  onTap: () {
-                                   
-                                    NavHelper.goTowishlist();
-                                  },
-                                  child: Stack(
-                                    clipBehavior: Clip.none,
-                                    children: [
-                                      Container(
-                                        width: 30.w,
-                                        height: 30.w,
-                                        decoration: const BoxDecoration(
-                                          color: Color.fromARGB(
-                                            255,
-                                            255,
-                                            255,
-                                            255,
-                                          ),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Icon(
-                                          Icons.favorite_outline,
-                                          size: 20.sp,
-                                          color: AppsColors.primary,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        right: -2,
-                                        top: -2,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(5),
-                                          decoration: const BoxDecoration(
-                                            color: Colors.red,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Text(
-                                            "5",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 8.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                SizedBox(width: 10.w),
-                                // Notification Button
-                                GestureDetector(
-                                  onTap: () {
-                                    
-                                    NavHelper.goTonotificatin();
-                                  },
-                                  child: Stack(
-                                    clipBehavior: Clip.none,
-                                    children: [
-                                      Container(
-                                        width: 30.w,
-                                        height: 30.w,
-                                        decoration: const BoxDecoration(
-                                          color: Color.fromARGB(
-                                            255,
-                                            255,
-                                            255,
-                                            255,
-                                          ),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Icon(
-                                          Icons.notifications_none,
-                                          size: 20.sp,
-                                          color: AppsColors.primary,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        right: -2,
-                                        top: -2,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(5),
-                                          decoration: const BoxDecoration(
-                                            color: Colors.red,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Text(
-                                            "5",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 8.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10.h),
-                      ],
-                    ),
-                  ),
+                  child: _Header(mediaQueryPaddingTop: mediaQuery.padding.top),
                 ),
-
-                /// Sticky Search Bar
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: _StickySearchBarDelegate(
@@ -299,233 +99,41 @@ class _HomePageState extends State<HomePage> {
                         horizontal: 10.w,
                         vertical: 8.h,
                       ),
-                      child: SearchBarWidget(),
+                      child: const SearchBarWidget(),
                     ),
                   ),
                 ),
-SliverToBoxAdapter(
-  child: Container(
-    height: 120, // parent ki fixed height
-    width: double.infinity,
-    child: Stack(
-      fit: StackFit.expand,
-      children: [
-        // 1️⃣ Background GIF with bottom crop
-        ClipRect(
-          child: OverflowBox(
-            maxHeight: double.infinity, // GIF jitna bada h utna render ho
-            alignment: Alignment.topCenter, // upar se chipka rahe
-            child: Image.asset(
-              "assets/images/welcomedesign.gif",
-              width: double.infinity,
-              fit: BoxFit.cover, // width fill karega
-            ),
-          ),
-        ),
-
-        // 2️⃣ Foreground Content
-        Padding(
-          padding: const EdgeInsets.only(top: 30),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Center Text/Image Block
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/images/welcome.png",
-                      width: 180,
-                    ),
-                    const SizedBox(height: 5),
-                    Transform(
-                      transform: Matrix4.identity()..rotateX(-0.1),
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Maggi Ban’ne Se Pehle Delivery",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 6,
-                              color: Colors.black.withOpacity(0.4),
-                              offset: Offset(2, 2),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                const SliverToBoxAdapter(child: _GifBanner()),
+                SliverToBoxAdapter(child: _BuyAgainSection(buyAgainJson)),
+                SliverToBoxAdapter(child: _BuyAgainCategories(buyAgainJson)),
+                BlocBuilder<CategoriesBloc, CategoriesState>(
+                  buildWhen: (prev, curr) => prev.status != curr.status,
+                  builder: (context, state) {
+                    switch (state.status) {
+                      case CategoriesStatus.loading:
+                      case CategoriesStatus.initial:
+                        return const SliverToBoxAdapter(
+                          child: CategoryShimmerGrid(crossAxisCount: 4),
+                        );
+                      case CategoriesStatus.failure:
+                        return SliverToBoxAdapter(
+                          child: Center(
+                            child: Text(state.error ?? "Something went wrong"),
+                          ),
+                        );
+                      case CategoriesStatus.success:
+                        return _CategoriesListView(
+                          categories: state.categories,
+                        );
+                    }
+                  },
                 ),
-              ),
-
-             
-            ],
-          ),
-        ),
-      ],
-    ),
-  ),
-),
-
-                // SliverToBoxAdapter(
-                //   child: Column(
-                //     children: [
-                //       // Top welcome banner with bags
-                //       Stack(
-                //         children: [
-                //           // Main Content Container (background color, text, images, etc.)
-                //           Container(
-                //             height: 80,
-
-                //             width: double.infinity,
-                //             decoration: BoxDecoration(
-                //               color: AppsColors.primary,
-                //             ),
-                //             child: Row(
-                //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //               crossAxisAlignment: CrossAxisAlignment.center,
-                //               children: [
-                //                 SmartCachedImage(
-                //                   imageUrl:
-                //                       "https://res.cloudinary.com/dlhbrpbfr/image/upload/w_470,ar_1200:1200,c_fit,f_auto,q_80/v1757772213/homepage1_qmr7uw.png",
-                //                   width: 50,
-                //                   height: 50,
-                //                 ),
-
-                //                 // Center text block
-                //                 Expanded(
-                //                   child: Column(
-                //                     mainAxisAlignment: MainAxisAlignment.center,
-                //                     crossAxisAlignment:
-                //                         CrossAxisAlignment.center,
-                //                     children: [
-                //                       Image.asset(
-                //                         width: 180,
-
-                //                         "assets/images/welcome.png",
-                //                         fit: BoxFit.contain,
-                //                       ),
-                //                       SizedBox(height: 5),
-                //                       Transform(
-                //                         transform: Matrix4.identity()
-                //                           ..rotateX(-0.1),
-                //                         alignment: Alignment.center,
-                //                         child: Text(
-                //                           "Maggi Ban’ne Se Pehle Delivery",
-                //                           style: TextStyle(
-                //                             fontSize: 12,
-                //                             fontWeight: FontWeight.w900,
-                //                             color: Colors.white,
-
-                //                             shadows: [
-                //                               Shadow(
-                //                                 blurRadius: 6,
-                //                                 color: Colors.black.withOpacity(
-                //                                   0.4,
-                //                                 ),
-                //                                 offset: Offset(2, 2),
-                //                               ),
-                //                             ],
-                //                           ),
-                //                           textAlign: TextAlign.center,
-                //                         ),
-                //                       ),
-                //                     ],
-                //                   ),
-                //                 ),
-
-                //                 SmartCachedImage(
-                //                   imageUrl:
-                //                       "https://res.cloudinary.com/dlhbrpbfr/image/upload/w_470,ar_1200:1200,c_fit,f_auto,q_80/v1757772213/homepage2_vdarqj.png",
-                //                   width: 50,
-                //                   height: 50,
-                //                   fit: BoxFit.contain,
-                //                 ),
-                //               ],
-                //             ),
-                //           ),
-
-                //           // Offers Banner at absolute bottom, overlaying the container
-                //           // Positioned(
-                //           //   left: 0,
-                //           //   right: 0,
-                //           //   bottom: -5, // Slight overlap as per your image
-                //           //   child: Container(
-                //           //    margin: EdgeInsets.symmetric(horizontal: 80),
-                //           //     height: 25,
-                //           //     decoration: BoxDecoration(
-                //           //        color: Color(0xffF1C12F),
-                //           //       borderRadius: BorderRadius.only(
-                //           //         topLeft: Radius.circular(40),
-                //           //         topRight: Radius.circular(40),
-                //           //       ),
-                //           //       boxShadow: [
-
-                //           //       ],
-                //           //     ),
-                //           //     child: Row(
-                //           //       mainAxisAlignment: MainAxisAlignment.center,
-                //           //       children: [
-                //           //         Text('✦', style: TextStyle(fontSize: 16,color: Color.fromARGB(255, 109, 76, 10),)),
-                //           //         SizedBox(width: 5),
-                //           //         Text(
-                //           //           "OFFERS FOR YOU",
-                //           //           style: TextStyle(
-                //           //             fontWeight: FontWeight.bold,
-                //           //             fontSize: 12,
-                //           //             color: Color.fromARGB(255, 109, 76, 10),
-                //           //             letterSpacing: 2,
-                //           //           ),
-                //           //         ),
-                //           //         SizedBox(width: 5),
-                //           //         Text('✦', style: TextStyle(fontSize: 16,color: Color.fromARGB(255, 109, 76, 10),)),
-                //           //       ],
-                //           //     ),
-                //           //   ),
-                //           // ),
-                //         ],
-                //       ),
-
-                //       // Container(
-                //       //   width: double.infinity,
-                //       //   height: 70,
-                //       // color: Color(0xffF1C12F),
-                //       //   child: Column(
-                //       //     children: [
-                //       //       PromoOfferList(),
-                //       //     ],
-                //       //   ),
-                //       // ),
-                //     ],
-                //   ),
-                // ),
-
-                /// 🔹 Sections with Grid
-                SliverToBoxAdapter(child: _SectionTitle("Grocery & Kitchen")),
-                _buildGridList(grocerykitchen, crossAxisCount),
-
-SliverToBoxAdapter(child: _SectionTitle("secondgrocery")),
-                _buildGridList(secondgrocery, crossAxisCount),
-
-                SliverToBoxAdapter(child: _SectionTitle("beauty")),
-                _buildGridList(beauty, crossAxisCount),
-                SliverToBoxAdapter(child: _SectionTitle("snacksanddrinks")),
-                _buildGridList(snacksanddrinks, crossAxisCount),
-                /// 🔹 Promo Banner (Blinkit-style, non-sticky)
-                SliverToBoxAdapter(
-                  child: const PromoBottomCard(
+                const SliverToBoxAdapter(
+                  child: PromoBottomCard(
                     message:
                         "Har zaroorat,\nBas kuch minute mein\ndelivered ❤️",
                   ),
                 ),
-
                 SliverToBoxAdapter(child: SizedBox(height: 30.h)),
               ],
             ),
@@ -534,40 +142,518 @@ SliverToBoxAdapter(child: _SectionTitle("secondgrocery")),
       ),
     );
   }
+}
 
-  /// 🔹 Grid Builder (Reusable)
-  SliverPadding _buildGridList(
-    List<Map<String, String>> data,
-    int crossAxisCount, {
-    bool showText = true,
-  }) {
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 5.w),
-      sliver: SliverGrid(
+// ------------------ Header ------------------
+
+class _Header extends StatelessWidget {
+  final double mediaQueryPaddingTop;
+  const _Header({super.key, required this.mediaQueryPaddingTop});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: kToolbarHeight + mediaQueryPaddingTop,
+      color: AppsColors.primary,
+      padding: EdgeInsets.only(
+        left: 12.w,
+        right: 12.w,
+        top: mediaQueryPaddingTop,
+      ),
+      child: Row(
+        children: [
+          _IconCircle(
+            icon: Icons.person,
+            onTap: NavHelper.goToProfile,
+            size: 35.w,
+            bgColor: Colors.white,
+            iconColor: AppsColors.primary,
+            iconSize: 22.sp,
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    style: TextStyle(fontSize: 27.sp, color: Colors.white),
+                    children: const [
+                      TextSpan(
+                        text: "mohalla ",
+                        style: TextStyle(fontFamily: 'Geometry'),
+                      ),
+                      TextSpan(
+                        text: "bazaar",
+                        style: TextStyle(fontFamily: 'Geometry'),
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  "Delivery in 30 minutes",
+                  style: TextStyle(fontSize: 12.sp, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+          _IconCircle(
+            icon: Icons.favorite_outline,
+            onTap: NavHelper.goTowishlist,
+            size: 30.w,
+            bgColor: Colors.white,
+            iconColor: AppsColors.primary,
+            iconSize: 20.sp,
+            badgeCount: 5,
+          ),
+          SizedBox(width: 10.w),
+          _IconCircle(
+            icon: Icons.notifications_none,
+            onTap: NavHelper.goTonotificatin,
+            size: 30.w,
+            bgColor: Colors.white,
+            iconColor: AppsColors.primary,
+            iconSize: 20.sp,
+            badgeCount: 5,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _IconCircle extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  final double size;
+  final Color bgColor;
+  final Color iconColor;
+  final double iconSize;
+  final int badgeCount;
+
+  const _IconCircle({
+    super.key,
+    required this.icon,
+    required this.onTap,
+    required this.size,
+    required this.bgColor,
+    required this.iconColor,
+    required this.iconSize,
+    this.badgeCount = 0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
+            child: Icon(icon, size: iconSize, color: iconColor),
+          ),
+          if (badgeCount > 0)
+            Positioned(
+              right: -2,
+              top: -2,
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  badgeCount.toString(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 8.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+// ------------------ Banner ------------------
+
+class _GifBanner extends StatelessWidget {
+  const _GifBanner({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 130.h,
+      width: double.infinity,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background GIF
+          ClipRect(
+            child: OverflowBox(
+              maxHeight: double.infinity,
+              alignment: Alignment.topCenter,
+              child: Image.asset(
+                "assets/images/welcomedesign.gif",
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+
+          // Foreground content
+          Padding(
+            padding: EdgeInsets.only(top: 60.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset("assets/images/welcome.png", width: 180.w),
+                    SizedBox(height: 5.h),
+                    Text(
+                      "Maggi Ban’ne Se Pehle Delivery",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 6,
+                            color: Colors.black.withOpacity(0.4),
+                            offset: const Offset(2, 2),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ------------------ Buy Again Section ------------------
+
+class _BuyAgainSection extends StatelessWidget {
+  final Map<String, dynamic> buyAgainJson;
+  const _BuyAgainSection(this.buyAgainJson);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _star(),
+              SizedBox(width: 5),
+              GradientText(
+                buyAgainJson["heading"],
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF09B40F), Color(0xFF006E13)],
+                ),
+              ),
+              SizedBox(width: 5),
+              _star(),
+            ],
+          ),
+          SizedBox(height: 6.h),
+          Row(
+            children: [
+              _lineGradient(startToEnd: true),
+              Text(
+                buyAgainJson["subtitle"],
+                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
+              ),
+              _lineGradient(startToEnd: false),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _star() => Text(
+    "*",
+    style: TextStyle(
+      fontSize: 18.sp,
+      fontWeight: FontWeight.bold,
+      color: AppsColors.primary,
+    ),
+  );
+
+  Widget _lineGradient({required bool startToEnd}) {
+    return Expanded(
+      child: Container(
+        height: 1,
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: startToEnd
+                ? [Colors.white, const Color(0xFF006E13)]
+                : [const Color(0xFF006E13), Colors.white],
+          ),
+        ),
+      ),
+    );
+  }
+
+}
+
+class _BuyAgainCategories extends StatelessWidget {
+  final Map<String, dynamic> buyAgainJson;
+  const _BuyAgainCategories(this.buyAgainJson);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 100.h,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        itemCount: buyAgainJson["categories"].length,
+        itemBuilder: (context, index) {
+          final category = buyAgainJson["categories"][index];
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(8), // ripple effect round
+              onTap: () {
+                // 👉 यहां अपनी navigation या action लिखो
+                // Example:
+                 NavHelper.goToparentcategorydetails("PC-0001");
+               
+              },
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 50.h,
+                    width: 50.w,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          SmartCachedImage(
+                            imageUrl: category["category_image"],
+                            fit: BoxFit.cover,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  SizedBox(
+                    width: 60.w,
+                    child: Text(
+                      category["category_name"],
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 11.sp),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+
+// ------------------ Categories ------------------
+
+class _CategoriesListView extends StatelessWidget {
+  final List<ParentCategoryEntity> categories;
+  const _CategoriesListView({super.key, required this.categories});
+
+  @override
+  Widget build(BuildContext context) {
+    const int crossAxisCount = 4;
+
+    return SliverList(
+      delegate: SliverChildBuilderDelegate((context, parentIndex) {
+        final parent = categories[parentIndex];
+        final int itemCount = min(8, parent.categories.length);
+
+        return Column(
+          children: [
+            SectionTitle(parent.parentName),
+            GridView.builder(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 15,
+                childAspectRatio: 80 / 120,
+              ),
+              itemCount: itemCount,
+              itemBuilder: (context, index) =>
+                  CategoryGridItem(data: parent.categories[index]),
+            ),
+          ],
+        );
+      }, childCount: categories.length),
+    );
+  }
+}
+
+class CategoryGridItem extends StatelessWidget {
+  final CategoryEntity data;
+  const CategoryGridItem({super.key, required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(15.r),
+      onTap: () => NavHelper.goTocategorydetails(),
+      child: Column(
+        children: [
+          Hero(
+            tag: data.id,
+            child: Container(
+              height: 90.h,
+              width: 90.w,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15.r),
+                color: Colors.white,
+              ),
+              child: SmartCachedImage(imageUrl: data.image),
+            ),
+          ),
+          SizedBox(height: 5.h),
+          Text(
+            data.name,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.black, fontSize: 13.sp),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CategoryShimmerGrid extends StatelessWidget {
+  final int crossAxisCount;
+  const CategoryShimmerGrid({super.key, required this.crossAxisCount});
+
+  @override
+  Widget build(BuildContext context) {
+    final placeholderCount = crossAxisCount * 2;
+
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: crossAxisCount,
-          mainAxisSpacing: 1.h,
-          crossAxisSpacing: 1.w,
+          mainAxisSpacing: 10.h,
+          crossAxisSpacing: 10.w,
           childAspectRatio: 80 / 120,
         ),
-        delegate: SliverChildBuilderDelegate(
-          (context, index) => _GridItemWidget(
-            data: data[index],
-            showText: showText,
-           
+        itemCount: placeholderCount,
+        itemBuilder: (_, __) => Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Column(
+            children: [
+              Container(
+                height: 90.h,
+                width: 90.w,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15.r),
+                ),
+              ),
+              SizedBox(height: 5.h),
+              Container(
+                height: 15.h,
+                width: 60.w,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5.r),
+                ),
+              ),
+            ],
           ),
-          childCount: data.length,
         ),
       ),
     );
   }
 }
 
-/// 🔹 Sticky Search Bar Delegate
+// ------------------ Utility Widgets ------------------
+
+class SectionTitle extends StatelessWidget {
+  final String title;
+  const SectionTitle(this.title, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          title,
+          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+}
+
+class GradientText extends StatelessWidget {
+  final String text;
+  final TextStyle style;
+  final Gradient gradient;
+  const GradientText(
+    this.text, {
+    super.key,
+    required this.style,
+    required this.gradient,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: style.copyWith(
+        foreground: Paint()
+          ..shader = gradient.createShader(const Rect.fromLTWH(0, 0, 200, 70)),
+      ),
+    );
+  }
+}
+
+// ------------------ Sticky Search Bar ------------------
+
 class _StickySearchBarDelegate extends SliverPersistentHeaderDelegate {
   final double height;
   final Widget child;
-
   _StickySearchBarDelegate({required this.height, required this.child});
 
   @override
@@ -588,62 +674,4 @@ class _StickySearchBarDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(covariant _StickySearchBarDelegate oldDelegate) {
     return oldDelegate.child != child || oldDelegate.height != height;
   }
-}
-
-/// 🔹 Grid Item (Each Category Card)
-class _GridItemWidget extends StatelessWidget {
-  final Map<String, String> data;
-  final bool showText;
-
-
-  const _GridItemWidget({
-    required this.data,
-    this.showText = true,
-   
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-     children: [
-  GestureDetector(
-    onTap: () {
-      NavHelper.goTocategorydetails("3df85226-54bb-4c6f-94f0-7e093b183813"); // fixed function name
-    },
-    child: Container(
-      color: Colors.white,
-      height: 110.h,
-      width: 90.w,
-      child: UiHelper.CustomImage(
-        img: data["img"]?.toString() ?? '',
-      ),
-    ),
-  ),
-  if (showText == true)
-    Text(
-      data["text"]?.toString() ?? '',
-      textAlign: TextAlign.center,
-      style: TextStyle(color: Colors.black, fontSize: 13.sp),
-    ),
-],
-
-    );
-  }
-}
-
-/// 🔹 Section Title
-class _SectionTitle extends StatelessWidget {
-  final String title;
-  const _SectionTitle(this.title);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-      child: Text(
-        title,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
-      ),
-    );
-  }
-}
+}  

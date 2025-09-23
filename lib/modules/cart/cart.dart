@@ -151,19 +151,10 @@ class _CartState extends State<Cart> {
   Widget build(BuildContext context) {
     final DashboardController controller = Get.find<DashboardController>();
 
-    /// 🔹 Responsive calculation for 3-column grid
-    final screenWidth = MediaQuery.of(context).size.width;
-    final itemHeight = 360.h;
-    final totalHorizontalPadding = 20.w;
+    
     final crossAxisSpacing = 8.w;
 
-    final itemWidth =
-        (screenWidth - totalHorizontalPadding - (2 * crossAxisSpacing)) / 3;
-
-    final childAspectRatio = itemWidth / itemHeight;
-    final double progressValue; // 0.0 to 1.0 for progress bar
-    final double remainingAmount; // amount left for free delivery
-
+    
     int quantity = 1;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 246, 245, 245),

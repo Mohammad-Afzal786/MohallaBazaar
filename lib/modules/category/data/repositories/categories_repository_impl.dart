@@ -1,8 +1,10 @@
+import 'package:mohalla_bazaar/modules/category/data/model/category_cache_model.dart';
+
 import '../../domain/entities/category_entity.dart';
 import '../../domain/repositories/categories_repository.dart';
 import '../datasources/categories_local_data_source.dart';
 import '../datasources/categories_remote_data_source.dart';
-import '../model/category_cache_model.dart';
+
 
 class CategoriesRepositoryImpl implements CategoriesRepository {
   final CategoriesRemoteDataSource remote;
@@ -20,53 +22,86 @@ class CategoriesRepositoryImpl implements CategoriesRepository {
   Future<List<ParentCategoryEntity>> fetchCategoriesFromApi() async {
     final response = await remote.fetchCategories();
 
-    // Cache me save karo
-    final cacheList = response.data
-        .expand((parent) => parent.categories.map((sub) => CategoryCacheModel()
+    // 🔹 Cache save
+    final cacheList = response.data.expand(
+      (parent) => parent.categories.map(
+        (cat) => CategoryCacheModel()
           ..parentName = parent.parentName
-          ..categoryId = sub.id
-          ..categoryName = sub.name
-          ..image = sub.image))
-        .toList();
+          ..parentId = parent.parentId
+          ..parentImage = parent.parentImage
+          ..parentSubtitle = parent.parentSubtitle
+          ..categoryId = cat.categoryId
+          ..categoryName = cat.name
+          ..image = cat.image
+          ..subtitle = cat.subtitle,
+      ),
+    ).toList();
 
     await local.saveCategories(cacheList);
 
-    return response.data
-        .map((parent) => ParentCategoryEntity(
-              parentName: parent.parentName,
-              categories: parent.categories
-                  .map((sub) => SubCategoryEntity(
-                        id: sub.id,
-                        name: sub.name,
-                        image: sub.image,
-                      ))
-                  .toList(),
-            ))
-        .toList();
+    return response.data.map(
+      (parent) => ParentCategoryEntity(
+        parentName: parent.parentName,
+        parentId: parent.parentId,
+        parentImage: parent.parentImage,
+        parentSubtitle: parent.parentSubtitle,
+        categories: parent.categories.map(
+          (cat) => CategoryEntity(
+            id: cat.id,
+            name: cat.name,
+            image: cat.image,
+            subtitle: cat.subtitle,
+            categoryId: cat.categoryId,
+          ),
+        ).toList(),
+      ),
+    ).toList();
   }
 
   @override
-  Future<void> saveCategoriesToCache(List<ParentCategoryEntity> categories) async {
-    final cacheList = categories
-        .expand((parent) => parent.categories.map((sub) => CategoryCacheModel()
+  Future<void> saveCategoriesToCache(
+      List<ParentCategoryEntity> categories) async {
+    final cacheList = categories.expand(
+      (parent) => parent.categories.map(
+        (cat) => CategoryCacheModel()
           ..parentName = parent.parentName
-          ..categoryId = sub.id
-          ..categoryName = sub.name
-          ..image = sub.image))
-        .toList();
+          ..parentId = parent.parentId
+          ..parentImage = parent.parentImage
+          ..parentSubtitle = parent.parentSubtitle
+          ..categoryId = cat.categoryId
+          ..categoryName = cat.name
+          ..image = cat.image
+          ..subtitle = cat.subtitle,
+      ),
+    ).toList();
 
     await local.saveCategories(cacheList);
   }
 
-  List<ParentCategoryEntity> _mapCacheToEntity(List<CategoryCacheModel> cacheList) {
-    final Map<String, List<SubCategoryEntity>> map = {};
+  List<ParentCategoryEntity> _mapCacheToEntity(
+      List<CategoryCacheModel> cacheList) {
+    final Map<String, List<CategoryCacheModel>> grouped = {};
     for (var c in cacheList) {
-      map.putIfAbsent(c.parentName, () => []).add(
-            SubCategoryEntity(id: c.categoryId, name: c.categoryName, image: c.image),
-          );
+      grouped.putIfAbsent(c.parentId, () => []).add(c);
     }
-    return map.entries
-        .map((e) => ParentCategoryEntity(parentName: e.key, categories: e.value))
-        .toList();
+
+    return grouped.entries.map((e) {
+      final first = e.value.first;
+      return ParentCategoryEntity(
+        parentName: first.parentName,
+        parentId: first.parentId,
+        parentImage: first.parentImage,
+        parentSubtitle: first.parentSubtitle,
+        categories: e.value
+            .map((c) => CategoryEntity(
+                  id: c.categoryId,
+                  name: c.categoryName,
+                  image: c.image,
+                  subtitle: c.subtitle,
+                  categoryId: c.categoryId,
+                ))
+            .toList(),
+      );
+    }).toList();
   }
 }

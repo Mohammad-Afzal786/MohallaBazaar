@@ -8,7 +8,8 @@ import 'package:mohalla_bazaar/modules/authentication_app/data/models/register_r
 import 'package:mohalla_bazaar/modules/authentication_app/data/models/resetpassword_request.dart';
 import 'package:mohalla_bazaar/modules/authentication_app/data/models/resetpassword_response.dart';
 import 'package:mohalla_bazaar/modules/category/data/model/category_response.dart';
-import 'package:mohalla_bazaar/modules/categorydetails/data/model/categorydetails_response.dart';
+import 'package:mohalla_bazaar/modules/category_details/data/models/category_details_response.dart';
+import 'package:mohalla_bazaar/modules/parent_category_details/data/model/parent_categorydetails_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'api_client.g.dart';
@@ -39,10 +40,18 @@ abstract class ApiClient {
   @Extra({"requiresToken": false})
   Future<CategoryResponse> getCategories();
 
-/// Category details / products endpoint (your example: getproducts?categoryId=...)
+
+  /// GET /getproducts?parentCategoryId=PC-0001
   @GET("/getproducts")
   @Extra({"requiresToken": false})
-  Future<CategoryDetailsResponse> getProducts(@Query("categoryId") String categoryId);
+  Future<ParentCategoryDetailsResponse> getParentCategoryDetails(
+    @Query("parentCategoryId") String parentCategoryId,
+  );
 
-
+  /// GET /getproducts?parentCategoryId=PC-0001
+  @GET("/getCategoryProducts")
+  @Extra({"requiresToken": false})
+  Future<CategoryDetailsResponse> getCategoryDetails(
+    @Query("categoryId") String CategoryId,
+  );
 }
