@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "860780122682",
+    "project_id": "mohalla-bazaar",
+    "storage_bucket": "mohalla-bazaar.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:860780122682:android:fffe032dc01f1f5d71db03",
+        "android_client_info": {
+          "package_name": "com.mohalla_bazaar.mohalla_bazaar.mohalla_bazaar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyucH_rGu4JNeOrqU-X9qZEuWlOirSIHs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

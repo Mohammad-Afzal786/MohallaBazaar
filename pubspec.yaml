@@ -1,0 +1,73 @@
+name: mohalla_bazaar
+description: "mohalla_bazaar quick delivery app"
+version: 1.0.7+8
+
+environment:
+  sdk: ^3.9.2
+dependencies:
+  flutter:
+    sdk: flutter
+  package_info_plus: ^8.0.0
+
+  cupertino_icons: ^1.0.8
+  get: ^4.7.2
+  get_storage: ^2.1.1
+  flutter_screenutil: ^5.9.3
+  # flutter_local_notifications: ^19.4.2
+  firebase_core: ^4.1.0
+  firebase_messaging: ^16.0.1
+  carousel_slider: ^5.0.0
+  cached_network_image: ^3.4.1
+  smooth_page_indicator: ^1.1.0
+  get_it: ^8.2.0
+  dartz: ^0.10.1
+  path: ^1.9.1
+  flutter_bloc: ^9.1.1
+  equatable: ^2.0.5
+  dio: ^5.4.0
+  retrofit: ^4.1.0
+  json_annotation: ^4.9.0
+  flutter_cache_manager: ^3.4.1
+  flutter_svg: ^2.2.1
+  lottie: ^3.3.2
+  scrollable_positioned_list: ^0.3.8
+  shimmer: ^3.0.0
+  sqflite: ^2.4.2
+  google_maps_flutter: ^2.13.1
+  geolocator: ^14.0.2
+  geocoding: ^4.0.0
+  location: ^8.0.1
+  intl: ^0.20.2
+  permission_handler: ^12.0.1
+  flutter_local_notifications: ^19.4.0
+  timeago_flutter: ^3.7.0
+  url_launcher: ^6.1.11
+  http: ^1.5.0
+  path_provider: ^2.1.5
+
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  build_runner: ^2.4.8
+  retrofit_generator: ^8.2.1
+  json_serializable: ^6.7.1
+  flutter_launcher_icons: ^0.14.4
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/images/launchericon.png"
+  remove_alpha_ios: true
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Geometry
+      fonts:
+        - asset: assets/fonts/Geometry.ttf
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/lottie/
